@@ -78,9 +78,9 @@ class_0_interpretation = "no default"
 
 # Please ENTER the profit/cost values for correctly classified and misclassified data:
 actual_1_predict_1 = 0
-actual_1_predict_0 = -100000
+actual_1_predict_0 = -1e+05
 actual_0_predict_1 = 0
-actual_0_predict_0 = 20000
+actual_0_predict_0 = 2e+04
 
 Profit_Matrix = matrix(c(actual_1_predict_1, actual_0_predict_1, actual_1_predict_0, actual_0_predict_0), ncol=2)
 colnames(Profit_Matrix) <- c(paste("Predict 1 (", class_1_interpretation, ")", sep = ""), paste("Predict 0 (", class_0_interpretation, ")", sep = ""))
@@ -555,10 +555,8 @@ knitr::kable(conf_matrix)
 
 **Answers:**
 
-* The **Actual 1** can be either predicted as a "0" or as a "1". The sum of these must therefore be 100%. Similarly, the **Actual 0** can be either predicted as a "0" or as a "1" with a sum of 100%.
-* Having higher diagaonal values than off-diagonal values will serve to be accurate, as the prediction will have a higher probability of being true. In the above outcome, it can be seen that the prediction of **no default** is already fairly accurate, while predicting those that did **default** is still quite bad.
-
-
+* The **Actual 1** can be either predicted as a "0" or as a "1". The sum of the probability of these predictions must, therefore, be 100%. Similarly, the **Actual 0** can be either predicted as a "0" or as a "1" with a sum of probabilities of 100%.
+* Having higher diagonal values than off-diagonal values will serve to be accurate, as the prediction will have a higher probability of being true (actual value equals predicted). In the above outcome, it can be seen that the prediction of **no default** is already fairly accurate, while predicting those that did **default** is still quite bad.
 
 ### 3. ROC curve
 Remember that each observation is classified by our model according to the probabilities Pr(0) and Pr(1) and a chosen probability threshold. Typically we set the probability threshold to 0.5 - so that observations for which Pr(1) > 0.5 are classified as 1's. However, we can vary this threshold, for example if we are interested in correctly predicting all 1's but do not mind missing some 0's (and vice-versa).
@@ -685,7 +683,7 @@ Why?
 
 **Answer:**
 
-* The 45-degree line corresponds to a **coin toss** with an outcome of 0.5. This can be easily shown when calculating the **Area under the curve**, which will be the triangle between (0,0), (1,1), and (1,0).
+* The 45-degree line corresponds to a **coin toss** with an outcome of 0.5. By selecting more validation cases (x-coordinate), exactly the same percentage of 1 class cases will be captured (y-coordinate). So the 45-degree line classifier does not help identify 1 class cases more efficiently. This can be also easily illustrated when calculating the **Area under the curve**, which will be the triangle between (0,0), (1,1), and (1,0).
 
 So how should a good gains chart look like? The further above this 45-degree reference line our gains curve is, the better the "gains". Moreover, much like for the ROC curve, one can select the percentage of all cases examined appropriately so that any point of the gains curve is selected. 
 
@@ -794,7 +792,7 @@ Which point on the profit curve would you select in practice?
 
 **Answer:**
 
-* To maximize profit, we would select the point which shows the highest estimated profit. For CART 1 and CART 2 this would be around 20%, for log reg it would be between 25% and 50%.
+* To maximize profit, we would select the point which shows the highest estimated profit. For CART 1 and CART 2 this would be around 20%, for log reg it would be between 25% and 50% - depending on the randomly selected test data.
 
 Notice that to maximize estimated profit, we need to have the cost/profit for each of the four cases! This can be difficult to assess, hence typically we want to do a sensitivity analysis to our assumptions about the cost/profit. For example, we can generate different profit curves (i.e., worst case, best case, average case scenarios) and see how much the best profit we get varies, and most importantly **how our selection of the classification model and of the probability threshold corresponding to the best profit vary**, as the classifier and the percentage of cases are what we need to decide on eventually. 
 
@@ -994,5 +992,6 @@ ggplot(df.all, aes(x=`% of test data selected`, y=value, colour=variable)) + geo
 **Answers:**
 
 * Yes, the performance in the test data is comparable to the performance in the validation data as it can be seen in the hit ratio, confusion matrix, ROC curve, gains chart and profit curve. Since the test data is a random pick from the real data and a large enough set (3000 data points), we would expect a similar performance if deployed in practice. If not, we would need to reconsider the estimation data set and the variables that were taken into account for the models.
-* Out of the three classifiers that we considered, we would recommend to use the Logistic Regression classifier because it outperforms CART1 and CART2 in all considered criteria. We would use 35% of the cases (or the corresponding probability threshold) because it maximizes the profit without compromising performance in the ROC and Gains curve. This would give a profit of around 7.5million as measured with the test data. 
-* The business decision to be made by the credit card issuer will likely be to maximize profit. Profits are maximized when the values in the diagonal of the confusion matrix are highest. By doing so, we would have monetary savings linked to the identification of potential defaults.
+* Out of the three classifiers that we considered, we would recommend to use the Logistic Regression classifier because it outperforms CART1 and CART2 in all considered criteria. We would use 35% of the cases (or the corresponding probability threshold) because it maximizes the profit without compromising performance in the ROC and Gains curve. This would give a profit of around 7.5million as measured with the test data.
+* The values in the profit matrix may change the relative performance of the classifiers (e.g., the shape of the ROC, gain curve and profit curve). However, logistic regression seems to outperform CART1 and CART2 in most of the cases. 
+* The business decision to be made by the credit card issuer will likely be to maximize profit. The above classification models help decide to which applicants to provide credit, based on their key parameters and carefully defined threshold values. Profits are maximized when the values in the diagonal of the confusion matrix are highest. By doing so, we would have monetary savings linked to the identification of potential defaults.
