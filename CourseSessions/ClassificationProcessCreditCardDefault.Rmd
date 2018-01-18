@@ -271,10 +271,35 @@ set_swatch(swatch.default)
 2. Which independent variables appear to have the most discriminatory power?
 
 **Answers:**
+* The following chart shows the box plots for LIMIT_BAL and PAY_AMT1 - PAY_AMT6 for class 1
 
-*
-*
+```{r echo=FALSE, fig.height=4.5}
+# Please ENTER the selected independent variables for which to draw box plots. 
+# Please use numbers, not column names. E.g., c(1:5, 7, 8) uses columns 1,2,3,4,5,7,8.
+boxplots_independent_variables = c(2,13:18) # use only the PAY_ variables
 
+DVvalues = unique(estimation_data[,dependent_variable])
+x0 = estimation_data[which(estimation_data[,dependent_variable]==DVvalues[1]),boxplots_independent_variables]
+x1 = estimation_data[which(estimation_data[,dependent_variable]==DVvalues[2]),boxplots_independent_variables]
+colnames(x0) <- 1:ncol(x0)
+colnames(x1) <- 1:ncol(x1)
+
+swatch.default <- as.character(swatch())
+set_swatch(c(swatch.default[1], colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol(x1))))
+ggplot(melt(cbind.data.frame(n=1:nrow(x1), x1), id="n"), aes(x=n, y=value, colour=variable)) + geom_boxplot(fill="#FFFFFF", size=0.66, position=position_dodge(1.1*nrow(x1)))
+set_swatch(swatch.default)
+```
+
+and class 0:
+
+```{r echo=FALSE, fig.height=4.5}
+swatch.default <- as.character(swatch())
+set_swatch(c(swatch.default[1], colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol(x0))))
+ggplot(melt(cbind.data.frame(n=1:nrow(x0), x0), id="n"), aes(x=n, y=value, colour=variable)) + geom_boxplot(fill="#FFFFFF", size=0.66, position=position_dodge(1.1*nrow(x0)))
+set_swatch(swatch.default)
+```
+
+* The variables that show the highest discriminatory power are PAY_0, PAY_2, PAY_3, and PAY_4 (see first two box plots) as well as LIMIT_BAL (see the two box plots above). The discriminatory power can be determined by large differences in the descriptive statistics that is shown in the box plots for the two classes of the dependent variable. 
 
 ## Step 4: Classification and Interpretation
 Once we decide which  dependent and independent variables to use (which can be revisited in later iterations), one can use a number of classification methods to develop a model that discriminates the different classes. 
