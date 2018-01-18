@@ -608,8 +608,8 @@ How should a good ROC curve look like? A rule of thumb in assessing ROC curves i
 
 **Answers:**
 
-*
-*
+* We would select the point closest to (0,1).
+* The dotted 45-degree line corresponds to a random classifier. Since all three models (logistic regression, CART 1 and CART 2) are above the diagonal, their predictionis **better** than random. 
 
 ### 4. Gains chart
 The gains chart is a popular technique in certain applications, such as direct marketing or credit risk. 
