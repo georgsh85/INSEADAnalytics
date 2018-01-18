@@ -684,7 +684,7 @@ Why?
 
 **Answer:**
 
-*
+* The 45-degree line corresponds to a **coin toss** with an outcome of 0.5. This can be easily shown when calculating the **Area under the curve**, which will be the triangle between (0,0), (1,1), and (1,0).
 
 So how should a good gains chart look like? The further above this 45-degree reference line our gains curve is, the better the "gains". Moreover, much like for the ROC curve, one can select the percentage of all cases examined appropriately so that any point of the gains curve is selected. 
 
@@ -694,7 +694,7 @@ Which point on the gains curve should we select in practice?
 
 **Answer:**
 
-*
+* Again, we should select the point closest to (0,1).
 
 ### 5. Profit curve
 Finally, we can generate the so called profit curve, which we often use to make our final decisions. The intuition is as follows. Consider a direct marketing campaign, and suppose it costs $1 to send an advertisement, and the expected profit from a person who responds positively is $45. Suppose you have a database of 1 million people to whom you could potentially send the promotion. Typical response rates are 0.05%. What fraction of the 1 million people should you send the promotion to? 
@@ -793,7 +793,7 @@ Which point on the profit curve would you select in practice?
 
 **Answer:**
 
-*
+* To maximize profit, we would select the point which shows the highest estimated profit. For CART 1 and CART 2 this would be around 20%, for log reg it would be around 35%.
 
 Notice that to maximize estimated profit, we need to have the cost/profit for each of the four cases! This can be difficult to assess, hence typically we want to do a sensitivity analysis to our assumptions about the cost/profit. For example, we can generate different profit curves (i.e., worst case, best case, average case scenarios) and see how much the best profit we get varies, and most importantly **how our selection of the classification model and of the probability threshold corresponding to the best profit vary**, as the classifier and the percentage of cases are what we need to decide on eventually. 
 
