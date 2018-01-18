@@ -995,4 +995,4 @@ ggplot(df.all, aes(x=`% of test data selected`, y=value, colour=variable)) + geo
 *
 *
 *
-*
+*The business decision to be made by the credit card issuer will likely be to maximize profit. Profits are maximized when the values in the diagonal of the confusion matrix are highest. By doing so, we would have monetary savings linked to the identification of potential defaults.
