@@ -481,8 +481,8 @@ Using the predicted class probabilities of the validation data, as outlined abov
 
 **Answer:**
 
-*
-*
+* For example, let's look at the US missile defense system: when the model predicts with a 99% probabilit threshold that the country is under attack, it sends a response strike, as this is a major event.
+* For credit card default classification, we should use a threshold corresponding to the likelihood that appears in our model ~75%.
 
 For different choices of the probability threshold, one can measure a number of classification performance metrics, which are outlined next.
 
