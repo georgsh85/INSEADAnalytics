@@ -481,18 +481,16 @@ Using the predicted class probabilities of the validation data, as outlined abov
 
 **Answer:**
 
-<<<<<<< HEAD
-* 
-* 
+* For example, let's look at the US missile defense system: when the model predicts with a 99% probability threshold that the country is under attack, it sends a response strike, as this is a major event. A low threshold probability would be triggered more easily and lead to catastrophic events for which there would be no reason.
+* For credit card default classification, we should use a threshold corresponding to the likelihood that appears in our model. Let's look at estimation_data: 
+
 ```{r echo=FALSE}
 class_percentages=matrix(c(sum(estimation_data[,dependent_variable]==1)/nrow(estimation_data),sum(estimation_data[,dependent_variable]==0)/nrow(estimation_data)), nrow=1); colnames(class_percentages)<-c("Class 1", "Class 0")
 rownames(class_percentages)<-"Percentages"
 knitr::kable(class_percentages)
 ```
-=======
-* For example, let's look at the US missile defense system: when the model predicts with a 99% probability threshold that the country is under attack, it sends a response strike, as this is a major event. A low threshold probability would be triggered more easily and lead to catastrophic events for which there would be no reason.
-* For credit card default classification, we should use a threshold corresponding to the likelihood that appears in our model ~75%.
->>>>>>> 2b171ace405e4f9807f364950c5a3aa4fa7ed2c1
+
+We can therefore choose 78% as a reasonable probability threshold.
 
 For different choices of the probability threshold, one can measure a number of classification performance metrics, which are outlined next.
 
