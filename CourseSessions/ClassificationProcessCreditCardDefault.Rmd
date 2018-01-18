@@ -554,8 +554,8 @@ knitr::kable(conf_matrix)
 
 **Answers:**
 
-* The actual "1" can be either predicted as a "0" or as a "1". The sum of these must therefore be 1. Similarly, the actual "0" can be either predicted as a "0" or as a "1" with a sum of 1.
-* Having higher diagaonal values than off-diagonal values will serve to be accurate, as the prediction will have a higher probability of being true.
+* The **Actual 1** can be either predicted as a "0" or as a "1". The sum of these must therefore be 100%. Similarly, the **Actual 0** can be either predicted as a "0" or as a "1" with a sum of 100%.
+* Having higher diagaonal values than off-diagonal values will serve to be accurate, as the prediction will have a higher probability of being true. In the above outcome, it can be seen that the prediction of **no default** is already fairly accurate, while predicting those that did **default** is still quite bad.
 
 
 
