@@ -300,7 +300,7 @@ ggplot(melt(cbind.data.frame(n=1:nrow(x0), x0), id="n"), aes(x=n, y=value, colou
 set_swatch(swatch.default)
 ```
 
-* The variables that show the highest discriminatory power are PAY_0, PAY_2, PAY_3, and PAY_4 (see first two box plots) as well as LIMIT_BAL (see the two box plots above). The discriminatory power can be determined by large differences in the descriptive statistics that is shown in the box plots for the two classes of the dependent variable. 
+* The variables that show the highest discriminatory power are PAY_0, PAY_2, PAY_3, and PAY_4 (see first two box plots) as well as LIMIT_BAL (see the two box plots above). The discriminatory power can be determined by large differences in the descriptive statistics that are shown in the box plots for the two classes of the dependent variable. 
 
 ## Step 4: Classification and Interpretation
 Once we decide which  dependent and independent variables to use (which can be revisited in later iterations), one can use a number of classification methods to develop a model that discriminates the different classes. 
@@ -436,7 +436,7 @@ Run CART for complexity parameter cp=0.0001 or smaller. Is it practical to run? 
 
 **Answer:**
 
-* For very small **cp**, an extremely high number of **branches** are created, which can result in overfitting (i.e. the model works very well on the estimation data but not well on other sets of data) and inpracticality (basically runtime both in model generation as well as in prediction). The overfitting will reduce the trust we place in the classifier.
+* For very small **cp**, an extremely high number of **branches** are created, which can result in overfitting (i.e. the model works very well on the estimation data but not well on other sets of data) and impracticality (basically high runtime both in model generation as well as in prediction). The overfitting will reduce the trust we place in the classifier.
 
 
 We have already discussed feature selection and complexity control for classification methods. In our case, we can see the relative importance of the independent variables using the `variable.importance` of the CART trees (see `help(rpart.object)` in R) or the z-scores from the output of logistic regression. For easier visualization, we scale all values between -1 and 1 (the scaling is done for each method separately - note that CART does not provide the sign of the "coefficients"). From this table we can see the **key drivers** of the classification according to each of the methods we used here. 
@@ -610,7 +610,7 @@ How should a good ROC curve look like? A rule of thumb in assessing ROC curves i
 **Answers:**
 
 * We would select the point closest to (0,1).
-* The dotted 45-degree line corresponds to a random classifier. Since all three models (logistic regression, CART 1 and CART 2) are above the diagonal, their predictionis **better** than random. 
+* The dotted 45-degree line corresponds to a random classifier. Since all three models (logistic regression, CART 1 and CART 2) are above the diagonal, their predictions are **better** than random. 
 
 ### 4. Gains chart
 The gains chart is a popular technique in certain applications, such as direct marketing or credit risk. 
@@ -794,7 +794,7 @@ Which point on the profit curve would you select in practice?
 
 **Answer:**
 
-* To maximize profit, we would select the point which shows the highest estimated profit. For CART 1 and CART 2 this would be around 20%, for log reg it would be around 35%.
+* To maximize profit, we would select the point which shows the highest estimated profit. For CART 1 and CART 2 this would be around 20%, for log reg it would be between 25% and 50%.
 
 Notice that to maximize estimated profit, we need to have the cost/profit for each of the four cases! This can be difficult to assess, hence typically we want to do a sensitivity analysis to our assumptions about the cost/profit. For example, we can generate different profit curves (i.e., worst case, best case, average case scenarios) and see how much the best profit we get varies, and most importantly **how our selection of the classification model and of the probability threshold corresponding to the best profit vary**, as the classifier and the percentage of cases are what we need to decide on eventually. 
 
@@ -993,7 +993,6 @@ ggplot(df.all, aes(x=`% of test data selected`, y=value, colour=variable)) + geo
 
 **Answers:**
 
+* Yes, the performance in the test data is comparable to the performance in the validation data as it can be seen in the hit ratio, confusion matrix, ROC curve, gains chart and profit curve. Since the test data is a random pick from the real data and a large enough set (3000 data points), we would expect a similar performance if deployed in practice. If not, we would need to reconsider the estimation data set and the variables that were taken into account for the models.
+* Out of the three classifiers that we considered, we would recommend to use the Logistic Regression classifier because it outperforms CART1 and CART2 in all considered criteria. We would use 35% of the cases (or the corresponding probability threshold) because it maximizes the profit without compromising performance in the ROC and Gains curve. This would give a profit of around 7.5million as measured with the test data. 
 * The business decision to be made by the credit card issuer will likely be to maximize profit. Profits are maximized when the values in the diagonal of the confusion matrix are highest. By doing so, we would have monetary savings linked to the identification of potential defaults.
-*
-*
-*
