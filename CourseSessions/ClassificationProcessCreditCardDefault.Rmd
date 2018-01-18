@@ -435,7 +435,7 @@ Run CART for complexity parameter cp=0.0001 or smaller. Is it practical to run? 
 
 **Answer:**
 
-* For very small *cp*, an extremely high number of *branches* is created, which can result in overfitting (i.e. the model works very well on the estimation data but not well on other sets of data) and inpracticality (basically runtime both in model generation as well as in prediction). The overfitting will reduce the trust we place in the classifier.
+* For very small *cp*, an extremely high number of *branches* is created, which can result in overfitting (i.e. the model works very well on the estimation data but not well on other sets of data) and inpracticality (basically runtime both in model generation as well as in prediction). The overfitting will reduce the trust we place in the classifier. 
 
 
 We have already discussed feature selection and complexity control for classification methods. In our case, we can see the relative importance of the independent variables using the `variable.importance` of the CART trees (see `help(rpart.object)` in R) or the z-scores from the output of logistic regression. For easier visualization, we scale all values between -1 and 1 (the scaling is done for each method separately - note that CART does not provide the sign of the "coefficients"). From this table we can see the **key drivers** of the classification according to each of the methods we used here. 
