@@ -481,8 +481,13 @@ Using the predicted class probabilities of the validation data, as outlined abov
 
 **Answer:**
 
-*
-*
+* 
+* 
+```{r echo=FALSE}
+class_percentages=matrix(c(sum(estimation_data[,dependent_variable]==1)/nrow(estimation_data),sum(estimation_data[,dependent_variable]==0)/nrow(estimation_data)), nrow=1); colnames(class_percentages)<-c("Class 1", "Class 0")
+rownames(class_percentages)<-"Percentages"
+knitr::kable(class_percentages)
+```
 
 For different choices of the probability threshold, one can measure a number of classification performance metrics, which are outlined next.
 
