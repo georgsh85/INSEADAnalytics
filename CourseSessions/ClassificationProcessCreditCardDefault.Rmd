@@ -435,7 +435,7 @@ Run CART for complexity parameter cp=0.0001 or smaller. Is it practical to run? 
 
 **Answer:**
 
-* For very small *cp*, an extremely high number of *branches* is created, which can result in overfitting (i.e. the model works very well on the estimation data but not well on other sets of data) and inpracticality (basically runtime both in model generation as well as in prediction). The overfitting will reduce the trust we place in the classifier. 
+* For very small *cp*, an extremely high number of *branches* is created, which can result in overfitting (i.e. the model works very well on the estimation data but not well on other sets of data) and inpracticality (basically runtime both in model generation as well as in prediction). The overfitting will reduce the trust we place in the classifier.
 
 
 We have already discussed feature selection and complexity control for classification methods. In our case, we can see the relative importance of the independent variables using the `variable.importance` of the CART trees (see `help(rpart.object)` in R) or the z-scores from the output of logistic regression. For easier visualization, we scale all values between -1 and 1 (the scaling is done for each method separately - note that CART does not provide the sign of the "coefficients"). From this table we can see the **key drivers** of the classification according to each of the methods we used here. 
@@ -481,6 +481,7 @@ Using the predicted class probabilities of the validation data, as outlined abov
 
 **Answer:**
 
+<<<<<<< HEAD
 * 
 * 
 ```{r echo=FALSE}
@@ -488,6 +489,10 @@ class_percentages=matrix(c(sum(estimation_data[,dependent_variable]==1)/nrow(est
 rownames(class_percentages)<-"Percentages"
 knitr::kable(class_percentages)
 ```
+=======
+* For example, let's look at the US missile defense system: when the model predicts with a 99% probability threshold that the country is under attack, it sends a response strike, as this is a major event. A low threshold probability would be triggered more easily and lead to catastrophic events for which there would be no reason.
+* For credit card default classification, we should use a threshold corresponding to the likelihood that appears in our model ~75%.
+>>>>>>> 2b171ace405e4f9807f364950c5a3aa4fa7ed2c1
 
 For different choices of the probability threshold, one can measure a number of classification performance metrics, which are outlined next.
 
@@ -551,8 +556,8 @@ knitr::kable(conf_matrix)
 
 **Answers:**
 
-*
-*
+* The actual "1" can be either predicted as a "0" or as a "1". The sum of these must therefore be 1. Similarly, the actual "0" can be either predicted as a "0" or as a "1" with a sum of 1.
+* Having higher diagaonal values than off-diagonal values will serve to be accurate, as the prediction will have a higher probability of being true.
 
 
 
