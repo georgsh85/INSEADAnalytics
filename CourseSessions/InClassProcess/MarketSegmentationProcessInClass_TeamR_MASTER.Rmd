@@ -162,16 +162,8 @@ iprint.df(round(thecor,2), scale=TRUE)
 
 **Answers:**
 
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
+* The highest correlation exist between the responses to questions 13 and 14. This is a perfect example of correlation since the questions are actually very similar. While #13 states that "When buying a boat, I tend to buy the latest and greatest", #14 starts with "When buying accessories for my boat...", otherwise identical. It is not surprising that many people respond similarly to those two questions. Other questions with high correlation include (16,17), (3,9), (6,7) and (27,28). 
+* In cases with very high correlation it might not be important to use both questions, instead one could reduce complexity by dropping one of them or calculating the average response.
 
 ## Step 4: Choose number of factors
 
