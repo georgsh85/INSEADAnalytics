@@ -215,7 +215,7 @@ iplot.df(melt(df, id="components"))
 * Eigenvalues should be greater than 1
 * The cumulative percentage of variance explained should be sufficiently large
 * All components up to the "elbow" of the scree plot (which can be difficult when the plot has multiple "elbows").
-* We would like to see a few components that explain a very high percentage of variance. This way, we can reduce the complexity of the segmentation without loosing too much information.
+* We would like to see a few components that explain a very high percentage of variance. This way, we can reduce the complexity of the segmentation without loosing too much information. In our case, when looking at Eigenvalues above 1, we end up losing a lot of information (only capturing 52.74%). This makes us wonder if there are other factors to take into account or reconsider the quality of the data.
 
 ## Step 5: Interpret the factors
 
@@ -266,13 +266,6 @@ iprint.df(Rotated_Factors_thres, scale=TRUE)
 
 * Looking at the questions that have high loadings for component 1, we find a similarity of interests: #9 "I see my boat as a status symbol", #26 "Having a powerful boat is what is most important to me", #3 "The brand of boat I buy says a lot about who I am" and #13 "When buying a boat, I tend to buy the latest and greatest". The "message" across all of these questions is aligned and differs from those that have high loadings in component 2: #18 "Boating gives me a feeling of adventure" #21 "Boating helps me to escape from everyday life and relax" and #19 "Boating allows me to experience nature". It can be very well imagined that people answering high for the questions contributing to component 1 will be looking at different boats than those answering high for the questions contributing to component 2. This definitely makes business sense.
 * The number of factors to be chosen is already indicated above and might be based on these statistical aspects. Furthermore, it is useful to choose factors in such a way that each attribute/question contributes only to one or a few factors (few high loadings per row) and that the attributes with high loadings differ significantly across the factors. This will help with interpreting the factors. Last but not least, a business only can handle a certain amount of complexity (cost benefit analysis) and, hence, a large number of factors should be avoided. 
-* 
-*
-*
-*
-*
-*
-*
 *
 
 ## Step 6:  Save factor scores 
@@ -293,16 +286,14 @@ iprint.df(t(head(NEW_ProjectData, 10)), scale=TRUE)
 
 **Answers**
 
+*Factor 1 has characteristics from Observations 2, 5, 8, 9. Looking back at the questions, there seems to be contraction: for example 8 & 9 are in opposition and also contradicts 2
+*To choose which of the initial 29 variables we would select to represent in each factor, we should have a minimum value (which needs to be defined to represent significance), and minimize overlap between the factors (i.e. just look at the factor for which the observation should the highest score)
+*Factor 2: Observations n/a
+*Factor 3: Observations 1,4,10: reputation and opinion is key to this segment
+*Factor 4: Observations 7
+*Factor 5: Observations 3,6: in this case, the factor makes sense: there is a sense of appreciation and identification with the boat
 *
-*
-*
-*
-*
-*
-*
-*
-*
-*
+
 
 <hr>\clearpage
 
