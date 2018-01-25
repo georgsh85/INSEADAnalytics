@@ -162,16 +162,8 @@ iprint.df(round(thecor,2), scale=TRUE)
 
 **Answers:**
 
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
+* The highest correlation exist between the responses to questions 13 and 14. This is a perfect example of correlation since the questions are actually very similar. While #13 states that "When buying a boat, I tend to buy the latest and greatest", #14 starts with "When buying accessories for my boat...", otherwise identical. It is not surprising that many people respond similarly to those two questions. Other questions with high correlation include (16,17), (3,9), (6,7) and (27,28). 
+* In cases with very high correlation it might not be important to use both questions because of redundancy, instead one could reduce complexity by dropping one of them or calculating the average response.
 
 ## Step 4: Choose number of factors
 
@@ -218,16 +210,12 @@ iplot.df(melt(df, id="components"))
 
 **Answers**
 
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
+* The table shows two "quality measures" used with PCA: **eigenvalue** and **percentage of variance explained**. The eigenvalue explains how much information each component captures. An eigenvalue > 1 indicates that the component captures more information than the average of any of the 29 original questions.The percentage of variance explained (and the cumulative percentage) describe how much of the original variance is contained in the components. The plot, **scree plot**, plots the eigenvalues in decreasing order which is the reason why the line will not increase.
+* The typical criteria to select how many components shall be used are:
+* Eigenvalues should be greater than 1
+* The cumulative percentage of variance explained should be sufficiently large
+* All components up to the "elbow" of the scree plot (which can be difficult when the plot has multiple "elbows").
+* We would like to see a few components that explain a very high percentage of variance. This way, we can reduce the complexity of the segmentation without loosing too much information.
 
 ## Step 5: Interpret the factors
 
@@ -276,9 +264,9 @@ iprint.df(Rotated_Factors_thres, scale=TRUE)
 
 **Answers**
 
-*
-*
-*
+* Looking at the questions that have high loadings for component 1, we find a similarity of interests: #9 "I see my boat as a status symbol", #26 "Having a powerful boat is what is most important to me", #3 "The brand of boat I buy says a lot about who I am" and #13 "When buying a boat, I tend to buy the latest and greatest". The "message" across all of these questions is aligned and differs from those that have high loadings in component 2: #18 "Boating gives me a feeling of adventure" #21 "Boating helps me to escape from everyday life and relax" and #19 "Boating allows me to experience nature". It can be very well imagined that people answering high for the questions contributing to component 1 will be looking at different boats than those answering high for the questions contributing to component 2. This definitely makes business sense.
+* The number of factors to be chosen is already indicated above and might be based on these statistical aspects. Furthermore, it is useful to choose factors in such a way that each attribute/question contributes only to one or a few factors (few high loadings per row) and that the attributes with high loadings differ significantly across the factors. This will help with interpreting the factors. Last but not least, a business only can handle a certain amount of complexity (cost benefit analysis) and, hence, a large number of factors should be avoided. 
+* 
 *
 *
 *
