@@ -520,7 +520,7 @@ We should also consider the robustness of our analysis as we change the clusteri
 
 **Answers**
 
-*
+*We have identified 2 segments: 1 and 7 - high content and low content. These take into account the Questions linked to a marked difference with the general population (in absolute value), and answering a set of cohesive questions. Our message in terms of strategy is to build 2 main products for the two key segments.
 *
 *
 *
