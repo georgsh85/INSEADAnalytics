@@ -162,7 +162,7 @@ iprint.df(round(thecor,2), scale=TRUE)
 
 **Answers:**
 
-* The highest correlation exist between the responses to questions 13 and 14. This is a perfect example of correlation since the questions are actually very similar. While #13 states that "When buying a boat, I tend to buy the latest and greatest", #14 starts with "When buying accessories for my boat...", otherwise identical. It is not surprising that many people respond similarly to those two questions. Other questions with high correlation include (16,17), (3,9), (6,7) and (27,28). 
+* The highest correlation exists between the responses to questions 13 and 14. This is a perfect example of correlation since the questions are actually very similar. While #13 states that "When buying a boat, I tend to buy the latest and greatest", #14 starts with "When buying accessories for my boat...", otherwise identical. It is not surprising that many people respond similarly to those two questions. Other questions with high correlation include (16,17), (3,9), (6,7) and (27,28).
 * In cases with very high correlation it might not be important to use both questions because of redundancy, instead one could reduce complexity by dropping one of them or calculating the average response.
 
 ## Step 4: Choose number of factors
@@ -225,7 +225,8 @@ Let's now see how the "top factors" look like.
 if (factor_selectionciterion == "eigenvalue")
   factors_selected = sum(Variance_Explained_Table_copy[,1] >= 1)
 if (factor_selectionciterion == "variance")
-  factors_selected = 1:head(which(Variance_Explained_Table_copy[,"cumulative percentage of variance"]>= minimum_variance_explained),1)
+  # factors_selected = 1:head(which(Variance_Explained_Table_copy[,"cumulative percentage of variance"]>= minimum_variance_explained),1)
+  factors_selected = head(which(Variance_Explained_Table_copy[,"cumulative percentage of variance"]>= minimum_variance_explained),1) # corrected by Team R
 if (factor_selectionciterion == "manual")
   factors_selected = manual_numb_factors_used
 ```
@@ -265,8 +266,9 @@ iprint.df(Rotated_Factors_thres, scale=TRUE)
 **Answers**
 
 * Looking at the questions that have high loadings for component 1, we find a similarity of interests: #9 "I see my boat as a status symbol", #26 "Having a powerful boat is what is most important to me", #3 "The brand of boat I buy says a lot about who I am" and #13 "When buying a boat, I tend to buy the latest and greatest". The "message" across all of these questions is aligned and differs from those that have high loadings in component 2: #18 "Boating gives me a feeling of adventure" #21 "Boating helps me to escape from everyday life and relax" and #19 "Boating allows me to experience nature". It can be very well imagined that people answering high for the questions contributing to component 1 will be looking at different boats than those answering high for the questions contributing to component 2. This definitely makes business sense.
-* The number of factors to be chosen is already indicated above and might be based on these statistical aspects. Furthermore, it is useful to choose factors in such a way that each attribute/question contributes only to one or a few factors (few high loadings per row) and that the attributes with high loadings differ significantly across the factors. This will help with interpreting the factors. Last but not least, a business only can handle a certain amount of complexity (cost benefit analysis) and, hence, a large number of factors should be avoided. 
-*
+* The number of factors to be chosen is already indicated above and might be based on these statistical aspects. Furthermore, it is useful to choose factors in such a way that each attribute/question contributes only to one or a few factors (few high loadings per row) and that the attributes with high loadings differ significantly across the factors. This will help with interpreting the factors. Last but not least, a business only can handle a certain amount of complexity (cost benefit analysis) and, hence, a large number of factors should be avoided.
+* 
+* 
 
 ## Step 6:  Save factor scores 
 
