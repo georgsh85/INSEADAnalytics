@@ -503,15 +503,8 @@ iprint.df(round(cluster_profile_ratios-1, 2))
 
 **Answers**
 
-*
-*
-*
-*
-*
-*
-*
-*
-*
+*These values compare the averages of the profiling variables of each segment relative to the average of the variables across the whole population. This helps us see differences with the general population and therefore identify clusters. For some questions, looking at the results from the table, it is difficult to identify how the information is relevant (multiple choices with brackets)
+*If we look at Segment 7, it seems this group is brand and status averse, looking for a basic application and less passionate about boating than the average consumer. We can call this cluster "detached"
 *
 
 ## Step 8: Robustness Analysis
