@@ -15,16 +15,9 @@ output:
 always_allow_html: yes
 ---
 
-<!-- **Note:** Assuming the working directory is "MYDIRECTORY/INSEADAnalytics" (where you have cloned the course material), you can create an html file by running in your console the command rmarkdown::render("CourseSessions/InClassProcess/MarketSegmentationProcessInClass.Rmd") -->
-
-<!-- > **IMPORTANT**: Please make sure you create a copy of this file with a customized name, so that your work (e.g. answers to the questions) is not over-written when you pull the latest content from the course github. 
-This is a **template process for market segmentation based on survey data**, using the  [Boats cases A](http://inseaddataanalytics.github.io/INSEADAnalytics/Boats-A-prerelease.pdf) and  [B](http://inseaddataanalytics.github.io/INSEADAnalytics/Boats-B-prerelease.pdf). -->
+<!-- **Note:** Assuming the working directory is "MYDIRECTORY/INSEADAnalytics" (where you have cloned the course material), you can create an html file by running in your console the command rmarkdown::render("CourseSessions/InClassProcess/MarketSegmentationProcessInClass_Georg_Eigenvalue.Rmd") -->
 
 All material and code is available at the [INSEAD Data Analytics for Business](http://inseaddataanalytics.github.io/INSEADAnalytics/) website and github. Before starting, make sure you have pulled the [course files](https://github.com/InseadDataAnalytics/INSEADAnalytics) on your github repository.  As always, you can use the `help` command in Rstudio to find out about any R function (e.g. type `help(list.files)` to learn what the R function `list.files` does).
-
-<!-- **Note:** you can create an html file by running in your console the command 
-rmarkdown::render("CourseSessions/InClassProcess/MarketSegmentationProcessInClass_TeamR_MASTER.Rmd") 
-(see also a [potential issue with plots](https://github.com/InseadDataAnalytics/INSEADAnalytics/issues/75))-->
 
 <hr>\clearpage
 
@@ -75,7 +68,7 @@ First we load the data to use (see the raw .Rmd file to change the data file as 
 datafile_name = "../Sessions23/data/Boats.csv"
 
 # Please enter the minimum number below which you would like not to print - this makes the readability of the tables easier. Default values are either 10e6 (to print everything) or 0.5. Try both to see the difference.
-MIN_VALUE = 0.44
+MIN_VALUE = 0.5
 
 # Please enter the maximum number of observations to show in the report and slides. 
 # DEFAULT is 10. If the number is large the report may be slow.
@@ -110,11 +103,11 @@ factor_attributes_used = c(2:30)
 
 # Please ENTER the selection criterions for the factors to use. 
 # Choices: "eigenvalue", "variance", "manual"
-factor_selectionciterion = "variance"
+factor_selectionciterion = "eigenvalue"
 
 # Please ENTER the desired minumum variance explained 
 # (Only used in case "variance" is the factor selection criterion used). 
-minimum_variance_explained = 75  # between 1 and 100
+minimum_variance_explained = 65  # between 1 and 100
 
 # Please ENTER the number of factors to use 
 # (Only used in case "manual" is the factor selection criterion used).
@@ -162,8 +155,16 @@ iprint.df(round(thecor,2), scale=TRUE)
 
 **Answers:**
 
-* The highest correlation exists between the responses to questions 13 and 14. This is a perfect example of correlation since the questions are actually very similar. While #13 states that "When buying a boat, I tend to buy the latest and greatest", #14 starts with "When buying accessories for my boat...", otherwise identical. It is not surprising that many people respond similarly to those two questions. Other questions with high correlation include (16,17), (3,9), (6,7) and (27,28).
-* In cases with very high correlation it might not be important to use both questions because of redundancy, instead one could reduce complexity by dropping one of them or calculating the average response.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
 
 ## Step 4: Choose number of factors
 
@@ -210,12 +211,16 @@ iplot.df(melt(df, id="components"))
 
 **Answers**
 
-* The table shows two "quality measures" used with PCA: **eigenvalue** and **percentage of variance explained**. The eigenvalue explains how much information each component captures. An eigenvalue > 1 indicates that the component captures more information than the average of any of the 29 original questions.The percentage of variance explained (and the cumulative percentage) describe how much of the original variance is contained in the components. The plot, **scree plot**, plots the eigenvalues in decreasing order which is the reason why the line will not increase.
-* The typical criteria to select how many components shall be used are:
-* Eigenvalues should be greater than 1
-* The cumulative percentage of variance explained should be sufficiently large
-* All components up to the "elbow" of the scree plot (which can be difficult when the plot has multiple "elbows").
-* We would like to see a few components that explain a very high percentage of variance. This way, we can reduce the complexity of the segmentation without loosing too much information. In our case, when looking at Eigenvalues above 1, we end up losing a lot of information (only capturing 52.74%). This makes us wonder if there are other factors to take into account or reconsider the quality of the data.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
 
 ## Step 5: Interpret the factors
 
@@ -225,8 +230,7 @@ Let's now see how the "top factors" look like.
 if (factor_selectionciterion == "eigenvalue")
   factors_selected = sum(Variance_Explained_Table_copy[,1] >= 1)
 if (factor_selectionciterion == "variance")
-  # factors_selected = 1:head(which(Variance_Explained_Table_copy[,"cumulative percentage of variance"]>= minimum_variance_explained),1)
-  factors_selected = head(which(Variance_Explained_Table_copy[,"cumulative percentage of variance"]>= minimum_variance_explained),1) # corrected by Team R
+  factors_selected = head(which(Variance_Explained_Table_copy[,"cumulative percentage of variance"]>= minimum_variance_explained),1)
 if (factor_selectionciterion == "manual")
   factors_selected = manual_numb_factors_used
 ```
@@ -265,10 +269,16 @@ iprint.df(Rotated_Factors_thres, scale=TRUE)
 
 **Answers**
 
-* Looking at the questions that have high loadings for component 1, we find a similarity of interests: #9 "I see my boat as a status symbol", #26 "Having a powerful boat is what is most important to me", #3 "The brand of boat I buy says a lot about who I am" and #13 "When buying a boat, I tend to buy the latest and greatest". The "message" across all of these questions is aligned and differs from those that have high loadings in component 2: #18 "Boating gives me a feeling of adventure" #21 "Boating helps me to escape from everyday life and relax" and #19 "Boating allows me to experience nature". It can be very well imagined that people answering high for the questions contributing to component 1 will be looking at different boats than those answering high for the questions contributing to component 2. This definitely makes business sense.
-* The number of factors to be chosen is already indicated above and might be based on these statistical aspects. Furthermore, it is useful to choose factors in such a way that each attribute/question contributes only to one or a few factors (few high loadings per row) and that the attributes with high loadings differ significantly across the factors. This will help with interpreting the factors. Last but not least, a business only can handle a certain amount of complexity (cost benefit analysis) and, hence, a large number of factors should be avoided.
-* 
-* 
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
 
 ## Step 6:  Save factor scores 
 
@@ -288,14 +298,16 @@ iprint.df(t(head(NEW_ProjectData, 10)), scale=TRUE)
 
 **Answers**
 
-*Factor 1 has characteristics from Observations 2, 5, 8, 9. Looking back at the questions, there seems to be contraction: for example 8 & 9 are in opposition and also contradicts 2
-*To choose which of the initial 29 variables we would select to represent in each factor, we should have a minimum value (which needs to be defined to represent significance), and minimize overlap between the factors (i.e. just look at the factor for which the observation should the highest score)
-*Factor 2: Observations n/a
-*Factor 3: Observations 1,4,10: reputation and opinion is key to this segment
-*Factor 4: Observations 7
-*Factor 5: Observations 3,6: in this case, the factor makes sense: there is a sense of appreciation and identification with the boat
 *
-
+*
+*
+*
+*
+*
+*
+*
+*
+*
 
 <hr>\clearpage
 
@@ -315,8 +327,7 @@ A key family of methods used for segmentation is what is called **clustering met
 ```{r setupcluster, echo=TRUE, tidy=TRUE}
 # Please ENTER then original raw attributes to use for the segmentation (the "segmentation attributes")
 # Please use numbers, not column names, e.g. c(1:5, 7, 8) uses columns 1,2,3,4,5,7,8
-# segmentation_attributes_used = c(28,25,27,14,20,8,3,12,13,5,9,11,2,30,24) #c(10,19,5,12,3) 
-segmentation_attributes_used = c(28,15,20,8,3,12,2,5,9,11,30,25,6,27)
+segmentation_attributes_used = c(10,19,5,12,3) #c(10,19,5,12,3) 
 
 # Please ENTER then original raw attributes to use for the profiling of the segments (the "profiling attributes")
 # Please use numbers, not column names, e.g. c(1:5, 7, 8) uses columns 1,2,3,4,5,7,8
@@ -365,6 +376,7 @@ ProjectData_scaled <- apply(ProjectData, 2, function(r) if (sd(r)!=0) (r-mean(r)
 ## Step 3. Select Segmentation Variables
 
 For simplicity will use one representative question for each of the factor we found in Part 1 (we can also use the "factor scores" for each respondent) to represent our survey respondents. These are the `segmentation_attributes_used` selected below. We can choose the question with the highest absolute factor loading for each factor. For example, when we use 5 factors with the varimax rotation we can select questions Q.1.9 (I see my boat as a status symbol), Q1.18 (Boating gives me a feeling of adventure), Q1.4 (I only consider buying a boat from a reputable brand), Q1.11 (I tend to perform minor boat repairs and maintenance on my own) and Q1.2 (When buying a boat  getting the lowest price is more important than the boat brand) - try it. These are columns 10, 19, 5, 12, and 3, respectively of the data matrix `Projectdata`. 
+
 ## Step 4: Define similarity measure
 
 We need to define a distance metric that measures how different people (observations in general) are from each other. This can be an important choice. Here are the differences between the observations using the distance metric we selected:
@@ -506,9 +518,16 @@ iprint.df(round(cluster_profile_ratios-1, 2))
 
 **Answers**
 
-*These values compare the averages of the profiling variables of each segment relative to the average of the variables across the whole population. This helps us see differences with the general population and therefore identify clusters. For some questions, looking at the results from the table, it is difficult to identify how the information is relevant (multiple choices with brackets)
-*If we look at Segment 7, it seems this group is brand and status averse, looking for a basic application and less passionate about boating than the average consumer. We can call this cluster "detached"
-*Conversely, some Segments identified do not seem to have specific "stand-out" characteristics. This is the case for Segments 2,3,4,5,6. We are therefore left with 2 true segments: 1 and 7: one high-feature, and one low-feature
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
 
 ## Step 8: Robustness Analysis
 
@@ -523,10 +542,16 @@ We should also consider the robustness of our analysis as we change the clusteri
 
 **Answers**
 
-*We have identified 2 segments: 1 and 7 - high content and low content. These take into account the Questions linked to a marked difference with the general population (in absolute value), and answering a set of cohesive questions. Our message in terms of strategy is to build 2 main products for the two key segments.
-*Looking at the data, it seems as though we might need to iterate our survey and data analysis: some question are more actionable than others when looking at the difference between an identified cluster and the general population. Asking the questions in a different way, and modifying some questions to be more specific will help us see if other segments exist.
 *
-
+*
+*
+*
+*
+*
+*
+*
+*
+*
 
 <hr>\clearpage
 
