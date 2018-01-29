@@ -265,7 +265,7 @@ iprint.df(Rotated_Factors_thres, scale=TRUE)
 
 **Answers**
 
-* Looking at the questions that have high loadings for component 1, we find a similarity of interests: #9 "I see my boat as a status symbol", #26 "Having a powerful boat is what is most important to me", #3 "The brand of boat I buy says a lot about who I am" and #13 "When buying a boat, I tend to buy the latest and greatest". The "message" across all of these questions is aligned and differs from those that have high loadings in component 2: #18 "Boating gives me a feeling of adventure" #21 "Boating helps me to escape from everyday life and relax" and #19 "Boating allows me to experience nature". It can be very well imagined that people answering high for the questions contributing to component 1 will be looking at different boats than those answering high for the questions contributing to component 2. This definitely makes business sense.
+* Looking at the questions that have high loadings for component 1, we find a similarity of interests: #9 "I see my boat as a status symbol", #26 *Having a powerful boat is what is most important to me*, #3 *The brand of boat I buy says a lot about who I am* and #13 *When buying a boat, I tend to buy the latest and greatest*. The "message" across all of these questions is aligned and differs from those that have high loadings in component 2: #18 *Boating gives me a feeling of adventure* #21 *Boating helps me to escape from everyday life and relax* and #19 *Boating allows me to experience nature*. It can be very well imagined that people answering high for the questions contributing to component 1 will be looking at different boats than those answering high for the questions contributing to component 2. This definitely makes business sense.
 * The number of factors to be chosen is already indicated above and might be based on these statistical aspects. Furthermore, it is useful to choose factors in such a way that each attribute/question contributes only to one or a few factors (few high loadings per row) and that the attributes with high loadings differ significantly across the factors. This will help with interpreting the factors. Last but not least, a business only can handle a certain amount of complexity (cost benefit analysis) and, hence, a large number of factors should be avoided.
 
 ## Step 6:  Save factor scores 
@@ -323,6 +323,7 @@ numb_clusters_used = 4 # for boats possibly use 5, for Mall_Visits use 3
 
 # Please enter the method to use for the segmentation:
 profile_with = "kmeans" #  "hclust" or "kmeans"
+# Attention: kmeans has a stochastic initialization, which can result in slightly different outcomes everytime the code is executed
 
 # Please ENTER the distance metric eventually used for the clustering in case of hierarchical clustering 
 # (e.g. "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski" - see help(dist)). 
@@ -504,16 +505,11 @@ iprint.df(round(cluster_profile_ratios-1, 2))
 
 * These values compare the averages of the profiling variables of each segment relative to the average of the variables across the whole population. This helps us see differences between the segment averages and the general population and therefore confirm that we indeed found clusters.
 * For the specific output above, we can conclude that the four clusters seem to be valid because on multiple profiling variables they significantly differ from the population average. Questions 1.2, 3, 5, 7, 9, 13, 14, 16, 17, 20, 26, 27 and 28, also 5, 17, 18 differentiate the four segments with ratios above 20% (in absolute value) for at least two clusters. These are around passion and knowledge for boating, power of the engine and brand consciousness. Nevertheless, Segments 1 and 4 seem to differ less from the population average than Segments 2 and 3.
-
-* Segment 1 is the "Boring Brand Buyers": they profile very close to the average population, valuing brand (Q1.4) and reputation of quality (Q5) to a slightly higher extent. They find low price (Q2), expertise (Q10), simplicity (Q12) and power (Q26) less important.
-* Segment 2 is the "Who Cares": they care much less than average about boating (clearly not a key passion, Q1.26-27), following the latest boat technology (Q13-17), and owning a boat clearly does not give them a sense of status or achievement (Q3,7,9).
-* Segment 3 is the "Boaters for Life": they are clearly into boating, which gives them a sense of passion (Q1.26-28), status (Q9), achievement (Q7). They are following the latest trends and know a lot about boats (Q13-17), including brands (Q3,7). They tend to have more powerful, longer boats (Q5-6), used for sports or socializing (Q9) alone or with friends and family (Q7). They would recommend a brand that they had positive experience with (Q16, 17) - although may buy a different brand next time (Q18). 
-* Segment 4 is the "Cheapos": they strongly prefer basic no frills boats (Q1.12), and value low price over brand (Q2) and powerful boats (Q12). They care less about brand (Q4) and reputation of quality (Q5) than the rest of the population.
-
+    + Segment 1 is the "Boring Brand Buyers": they profile very close to the average population, valuing brand (Q1.4) and reputation of quality (Q5) to a slightly higher extent. They find low price (Q2), expertise (Q10), simplicity (Q12) and power (Q26) less important.
+    + Segment 2 is the "Who Cares": they care much less than average about boating (clearly not a key passion, Q1.26-27), following the latest boat technology (Q13-17), and owning a boat clearly does not give them a sense of status or achievement (Q3,7,9).
+    + Segment 3 is the "Boaters for Life": they are clearly into boating, which gives them a sense of passion (Q1.26-28), status (Q9), achievement (Q7). They are following the latest trends and know a lot about boats (Q13-17), including brands (Q3,7). They tend to have more powerful, longer boats (Q5-6), used for sports or socializing (Q9) alone or with friends and family (Q7). They would recommend a brand that they had positive experience with (Q16, 17) - although may buy a different brand next time (Q18). 
+    + Segment 4 is the "Cheapos": they strongly prefer basic no frills boats (Q1.12), and value low price over brand (Q2) and powerful boats (Q12). They care less about brand (Q4) and reputation of quality (Q5) than the rest of the population.
 * All segments seem to be able to afford boats having similar household income (Q12), with Segment 1 being more well off (maybe therefore they blindly follow brands and care less about value for money), and Segment 4 being less well off (therefore being price-conscious).
-
-
-
 
 ## Step 8: Robustness Analysis
 
@@ -529,12 +525,10 @@ We should also consider the robustness of our analysis as we change the clusteri
 **Answers**
 
 * We have identified three real out of four segments (as Segment 2 is "passive", less interested in buying boats): "Boring Brand Buyers", "Boaters for Life" and "Cheapos".
-
-a) The existence of these segments seems to be supported by statistics: there are numerous variables that significantly differentiate them from the population average. As mentioned above: Questions 1.2, 3, 5, 7, 9, 13, 14, 16, 17, 20, 26, 27 and 28, also 5, 17, 18 (around passion and knowledge for boating, power of the engine and brand consciousness) are 20% different from the population average for at least two clusters. Nevertheless, Segments 1 and 4 seem to differ less from the population average than Segments 2 and 3.
-b) Interpretation arguments: the segments can be interpreted well showing consistent characteristics and behaviors, such as those who show strong passion value brands more and low price less and vice versa. Detailed profiling is below. 
-c) Business arguments: we may drop Segment 2 ("Who cares") because it seems to be less interested in buying boats in general. The other three segments are active, and targetable - either with high brand value, strong features or good value for money options.
-
-* The detailed analysis of the segments is in the answer of Step 7. As a recap of main characteristics:
+    a) The existence of these segments seems to be supported by statistics: there are numerous variables that significantly differentiate them from the population average. As mentioned above: Questions 1.2, 3, 5, 7, 9, 13, 14, 16, 17, 20, 26, 27 and 28, also 5, 17, 18 (around passion and knowledge for boating, power of the engine and brand consciousness) are 20% different from the population average for at least two clusters. Nevertheless, Segments 1 and 4 seem to differ less from the population average than Segments 2 and 3.
+    b) Interpretation arguments: the segments can be interpreted well showing consistent characteristics and behaviors, such as those who show strong passion value brands more and low price less and vice versa. Detailed profiling is below. 
+    c) Business arguments: we may drop Segment 2 ("Who cares") because it seems to be less interested in buying boats in general. The other three segments are active, and targetable - either with high brand value, strong features or good value for money options.
+* The detailed analysis of the segments is in the answer of *Step 7*. As a recap of main characteristics:
 Segment 1 is the "Boring Brand Buyers": they profile close to the average population but with higher income and without a great passion or interest for boating, therefore making their purchasing decision primarily based on brand and reputation (they can afford to simply follow brands and care less about value for money).
 Segment 3 is the "Boaters for Life": they are very much into boating with a life-long passion, actively following the latest trends and brands, having powerful and longer boats for leisure activities, also enjoying the status and achievement of buying a boat.
 Segment 4 is the "Cheapos": although they are more interested in owning boats than average, they strongly prefer basic no frills boats at a low price, being less well off than the average population.
@@ -542,8 +536,6 @@ Segment 4 is the "Cheapos": although they are more interested in owning boats th
 * We iterated the analysis a few times, changing the number of components used (5-15, based on eigenvalues/ variance), the clustering method (hclust/kmeans) and also the number of segments (2-7). We found that the most consistently interpretable and significantly separable (from population average and each other) segments result from analysis with ~14 components that explain ~75% of the variance in the population.  1<eigenvalues suggested using 5 components but then we would have lost ~50% of the information. Finally, we had to iterate k-means itself to arrive at the most plausible segments.
 
 * We advise CreeqBoat to target Segment 3 "Boaters for Life" with a modern boat with strong specifics and appealing design to set foot in the North American market. As for context, CreeqBoat aims to enter the North American market with targeted model(s) for prioritized customer segments. Expanding to this market is a necessity for the company to avoid becoming a victim of the boating industry crisis. We learnt from the cluster analysis that there are three relevant segments in this market: "Boring Brand Buyers", "Boaters for Life" and "Cheapos". Since CreeqBoat is new to this market, it potentially does not have a brand name yet that it can leverage to attract the "Boring Brand Buyers" segment. Furthermore, achieving high profitability from the "Cheapos" segment would require economies of scale, which CreeqBoat cannot again leverage as a new player on this market. Therefore, the company should target the "Boaters for Life" segment first, to establish brand value (i.e., potential for further future growth), with boat specifics that best cater to their needs. This means designing more powerful, longer boats in line with the latest boat technology, and in the marketing campaign emphasizing a life-long passion for boating as a high-quality leisure activity (sports and socializing) alone or with friends and family.
-
-
 
 <hr>\clearpage
 
