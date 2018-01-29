@@ -294,12 +294,15 @@ iprint.df(t(head(NEW_ProjectData, 10)), scale=TRUE)
 
 **Answers**
 
-* Factor 1 has characteristics from Observations 2, 5, 8, 9. Looking back at the questions, there seems to be contraction: for example 8 & 9 are in opposition and also contradicts 2
+* The first individual (Obs1) seems to be driven by trends, prestige and adventure,  (factors 2,4,3) and care less about price, DIY-repairs and functionality. The second individual (Obs2) 
+1 has characteristics from Observations 2, 5, 8, 9. Looking back at the questions, there seems to be contraction: for example 8 & 9 are in opposition and also contradicts 2
 * To choose which of the initial 29 variables we would select to represent in each factor, we should have a minimum value (which needs to be defined to represent significance), and minimize overlap between the factors (i.e. just look at the factor for which the observation should the highest score)
 * Factor 2: Observations n/a
 * Factor 3: Observations 1,4,10: reputation and opinion is key to this segment
 * Factor 4: Observations 7
 * Factor 5: Observations 3,6: in this case, the factor makes sense: there is a sense of appreciation and identification with the boat
+
+* For simplifying the analysis and ensuring easier interpretation od the factors used, we would select 14 of the initial variables which have the highest loading for each of the 14 factors. This way the segmentaion variables are questions 27, 14, 19, 7, 2, 11, 1, 4, 8, 10, 29, 24, 5 and 26.
 
 <hr>\clearpage
 
