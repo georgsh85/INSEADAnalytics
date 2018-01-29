@@ -265,8 +265,11 @@ iprint.df(Rotated_Factors_thres, scale=TRUE)
 
 **Answers**
 
-* Looking at the questions that have high loadings for component 1, we find a similarity of interests: #9 "I see my boat as a status symbol", #26 *Having a powerful boat is what is most important to me*, #3 *The brand of boat I buy says a lot about who I am* and #13 *When buying a boat, I tend to buy the latest and greatest*. The "message" across all of these questions is aligned and differs from those that have high loadings in component 2: #18 *Boating gives me a feeling of adventure* #21 *Boating helps me to escape from everyday life and relax* and #19 *Boating allows me to experience nature*. It can be very well imagined that people answering high for the questions contributing to component 1 will be looking at different boats than those answering high for the questions contributing to component 2. This definitely makes business sense.
-* The number of factors to be chosen is already indicated above and might be based on these statistical aspects. Furthermore, it is useful to choose factors in such a way that each attribute/question contributes only to one or a few factors (few high loadings per row) and that the attributes with high loadings differ significantly across the factors. This will help with interpreting the factors. Last but not least, a business only can handle a certain amount of complexity (cost benefit analysis) and, hence, a large number of factors should be avoided.
+* The first five factors indeed make business sense, with the following interpretations. Component 1 represents **passion for boating** with high loadings for Questions 27, 28, 20 (boating is true passion, number one thing in spare time, spending time on boat-related activities). Component 2 captures **trendiness** with high load on buying the latest and greatest boat and accessories. Component 3 is **adventurousness** with experiencing nature and escaping from everyday life. Component 4 is about **prestige**, considers the status, achievement and reward aspect of boating. Component 5 is **price-consciousness**, expressing preference for low price and no frills/ basic boat. The remaining 9 factors each capture one question from the survey.
+* The number of factors to be chosen is already indicated above and might be based on statistical aspects such as having a significantly large eigenvalue or the factors together have sufficient explanatory power (e.g., 75% of variance captured). As for interpretation arguments, it is useful to choose factors in such a way that each attribute/question contributes only to one or a few factors (few high loadings per row) and that the attributes with high loadings differ significantly across the factors. Finally, the factors should capture relevant aspects of the business (problem) and not be too many. Namely, a business only can handle a certain level of complexity (cost benefit analysis) and, hence, a large number of factors should be avoided.
+* We selected 14 factors, and started to outline the interpretation of the first 5 in the first bullet above. The interpretations of the factors are (from 1-14): passion, trendiness, adventurousness, prestige, price-consciousness, DIY-repair, shopping-around, brand-following, functionality-focus, expert-advised, lacking passion, socializing, premium-paying, sport-support. 
+* The lesson that we learn is that we need to decide on a business solution to a technical problem: the factors that we are selecting should have a meaningful business interpretation, not only be justifiable by statistical arguments.
+
 
 ## Step 6:  Save factor scores 
 
@@ -286,12 +289,12 @@ iprint.df(t(head(NEW_ProjectData, 10)), scale=TRUE)
 
 **Answers**
 
-* Factor 1 has characteristics from Observations 2, 5, 8, 9. Looking back at the questions, there seems to be contraction: for example 8 & 9 are in opposition and also contradicts 2
-* To choose which of the initial 29 variables we would select to represent in each factor, we should have a minimum value (which needs to be defined to represent significance), and minimize overlap between the factors (i.e. just look at the factor for which the observation should the highest score)
-* Factor 2: Observations n/a
-* Factor 3: Observations 1,4,10: reputation and opinion is key to this segment
-* Factor 4: Observations 7
-* Factor 5: Observations 3,6: in this case, the factor makes sense: there is a sense of appreciation and identification with the boat
+* The first individual (Obs1) seems to be driven by trends, prestige and adventure (factors 2,4,3) and care less about price, DIY-repairs and functionality (factors 5,6,9).
+* The second individual (Obs2) values trends, prestige, expert opinion (factors 2,4,10), and cares less about shopping around, sports and price (factors 7,14,5).
+* The third individual (Obs3) wants to have the latest-greatest and willing to pay a premium for it (factors 2,13), and bothers much less than average about functionality, DIY-repair, shopping around for deals and price (factors 9, 5-7).
+* Obs10 shows a very different profile from the above three that values rather passion, adventure and good price for a basic boat (factors 3,5,1) and does not follow, research or pays premium for brands factors 7,8,13).
+
+* For simplifying the analysis and ensuring easier interpretation of the factors used, we would select 14 of the initial variables which have the highest loading for each of the 14 factors. This way the segmentation variables are questions 27, 14, 19, 7, 2, 11, 1, 4, 8, 10, 29, 24, 5 and 26.
 
 <hr>\clearpage
 
@@ -532,9 +535,7 @@ We should also consider the robustness of our analysis as we change the clusteri
 Segment 1 is the "Boring Brand Buyers": they profile close to the average population but with higher income and without a great passion or interest for boating, therefore making their purchasing decision primarily based on brand and reputation (they can afford to simply follow brands and care less about value for money).
 Segment 3 is the "Boaters for Life": they are very much into boating with a life-long passion, actively following the latest trends and brands, having powerful and longer boats for leisure activities, also enjoying the status and achievement of buying a boat.
 Segment 4 is the "Cheapos": although they are more interested in owning boats than average, they strongly prefer basic no frills boats at a low price, being less well off than the average population.
-
 * We iterated the analysis a few times, changing the number of components used (5-15, based on eigenvalues/ variance), the clustering method (hclust/kmeans) and also the number of segments (2-7). We found that the most consistently interpretable and significantly separable (from population average and each other) segments result from analysis with ~14 components that explain ~75% of the variance in the population.  1<eigenvalues suggested using 5 components but then we would have lost ~50% of the information. Finally, we had to iterate k-means itself to arrive at the most plausible segments.
-
 * We advise CreeqBoat to target Segment 3 "Boaters for Life" with a modern boat with strong specifics and appealing design to set foot in the North American market. As for context, CreeqBoat aims to enter the North American market with targeted model(s) for prioritized customer segments. Expanding to this market is a necessity for the company to avoid becoming a victim of the boating industry crisis. We learnt from the cluster analysis that there are three relevant segments in this market: "Boring Brand Buyers", "Boaters for Life" and "Cheapos". Since CreeqBoat is new to this market, it potentially does not have a brand name yet that it can leverage to attract the "Boring Brand Buyers" segment. Furthermore, achieving high profitability from the "Cheapos" segment would require economies of scale, which CreeqBoat cannot again leverage as a new player on this market. Therefore, the company should target the "Boaters for Life" segment first, to establish brand value (i.e., potential for further future growth), with boat specifics that best cater to their needs. This means designing more powerful, longer boats in line with the latest boat technology, and in the marketing campaign emphasizing a life-long passion for boating as a high-quality leisure activity (sports and socializing) alone or with friends and family.
 
 <hr>\clearpage
