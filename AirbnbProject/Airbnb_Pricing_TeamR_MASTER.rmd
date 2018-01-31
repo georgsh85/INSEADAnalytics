@@ -1,0 +1,99 @@
+---
+title: "Airbnb Pricing Tool"
+author: "Team R"
+date: "31 Januar 2018"
+output:
+  html_document:
+    css: ../AnalyticsStyles/default.css
+    theme: paper
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+  pdf_document:
+    includes:
+      in_header: ../AnalyticsStyles/default.sty
+always_allow_html: yes
+---
+
+<!-- rmarkdown::render("AirbnbProject/Airbnb_Pricing_TeamR_MASTER.rmd") -->
+
+```{r echo=FALSE, message=FALSE}
+make_pdf_file = 0 # SET THIS TO 1 IF WE COMPILE PDF FILE, 0 OTHERWISE (FOR HTML)
+
+source("../AnalyticsLibraries/library.R")
+source("../AnalyticsLibraries/heatmapOutput.R")
+
+# Package options
+ggthemr('fresh')  # ggplot theme
+opts_knit$set(progress=FALSE, verbose=FALSE)
+opts_chunk$set(echo=FALSE, fig.align="center", fig.width=10, fig.height=6.2)
+options(knitr.kable.NA = '')
+```
+
+```{r echo=FALSE, message=FALSE}
+# Please ENTER the filename
+datafile_name = "Data/tomslee_airbnb_amsterdam_1476_2017-07-22.csv"
+PricingData <- read.csv(datafile_name)
+# We turn the data into data.matrix class so that we can easier manipulate it
+PricingData <- data.matrix(PricingData)
+
+# Please ENTER the dependent variable.
+dependent_variable = 14 # i.e Price
+
+# Please ENTER the attributes to use as independent variables. 
+independent_variables = c(1:13,18:19) # use all the available attributes
+
+max_data_report = 10
+```
+
+# The Business Context
+Airbnb was founded in 2008 by *Brian Chesky*, *Joe Gebbia*, and *Nathan Blecharczyk* as *AirBed & Breakfast*, an online marketplace and hospitality service for short-term lodging. Over the past years, the share of professional hospitality providers has significantly increased and is now *crowding out* the private providers, threatening Airbnb's value proposition of *unique design and personal touch*. Within this context, the marketing department wants to run a campaign to attract more private providers. To do this, they requested the analytics department to create a tool that helps interested landlords to understand how much money they could earn with their respective apartment. 
+
+As a pilot, Amsterdam was chosen because of the "Airbnb friendly" policy of the local regulators and the high number of short-term visitors. The proposed solution, however, is designed to be city-independent and therefore, an easily replicable process was designed, using *.rmd-Files* and *Github*.
+
+
+<hr>\clearpage
+
+# The Data
+(Data source: http://tomslee.net/airbnb-data-collection-get-the-data. We acknowledge the following: All material is copyright Tom Slee, licensed under a Creative Commons Attribution-NonCommercial 2.5 Canada License.)
+
+The data is collected from the official Airbnb website
+
+Name                       | Description
+:--------------------------|:--------------------------------------------------------------------
+ID                         | ID of each client
+LIMIT_BAL                  | Amount of given credit in NT dollars (includes individual and family/supplementary credit)
+SEX                        | Gender (1=male, 2=female)
+EDUCATION                  | (1=graduate school, 2=university, 3=high school, 4=others, 5=unknown, 6=unknown)
+MARRIAGE                   | Marital status (1=married, 2=single, 3=others)
+AGE                        | Age in years
+PAY_0                      | Repayment status in September, 2005 (-2=no consumption, -1=pay duly, 0=the use of revolving credit, 1=payment delay for one month, 2=payment delay for two months, ... 8=payment delay for eight months, 9=payment delay for nine months and above)
+PAY_2                      | Repayment status in August, 2005 (scale same as above)
+PAY_3                      | Repayment status in July, 2005 (scale same as above)
+PAY_4                      | Repayment status in June, 2005 (scale same as above)
+PAY_5                      | Repayment status in May, 2005 (scale same as above)
+PAY_6                      | Repayment status in April, 2005 (scale same as above)
+BILL_AMT1                  | Amount of bill statement in September, 2005 (NT dollar)
+BILL_AMT2                  | Amount of bill statement in August, 2005 (NT dollar)
+BILL_AMT3                  | Amount of bill statement in July, 2005 (NT dollar)
+BILL_AMT4                  | Amount of bill statement in June, 2005 (NT dollar)
+BILL_AMT5                  | Amount of bill statement in May, 2005 (NT dollar)
+BILL_AMT6                  | Amount of bill statement in April, 2005 (NT dollar)
+PAY_AMT1                   | Amount of previous payment in September, 2005 (NT dollar)
+PAY_AMT2                   | Amount of previous payment in August, 2005 (NT dollar)
+PAY_AMT3                   | Amount of previous payment in July, 2005 (NT dollar)
+PAY_AMT4                   | Amount of previous payment in June, 2005 (NT dollar)
+PAY_AMT5                   | Amount of previous payment in May, 2005 (NT dollar)
+PAY_AMT6                   | Amount of previous payment in April, 2005 (NT dollar)
+default.payment.next.month | Default payment (1=yes, 0=no)
+
+Let's look into the data for a few customers. This is how the first `r min(max_data_report, nrow(PricingData))` out of the total of `r nrow(PricingData)` rows look like (transposed, for convenience):
+
+```{r echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
+knitr::kable({
+  df <- t(head(round(PricingData[,independent_variables],2), max_data_report))
+  colnames(df) <- sprintf("%02d", 1:ncol(df))
+  df
+})
+```
