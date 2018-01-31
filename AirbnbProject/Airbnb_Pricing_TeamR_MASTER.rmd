@@ -34,9 +34,9 @@ options(knitr.kable.NA = '')
 ```{r echo=FALSE, message=FALSE}
 # Please ENTER the filename
 datafile_name = "Data/tomslee_airbnb_amsterdam_1476_2017-07-22.csv"
-PricingData <- read.csv(datafile_name)
+PricingData <- read.csv(datafile_name, stringsAsFactors = TRUE)
 # We turn the data into data.matrix class so that we can easier manipulate it
-PricingData <- data.matrix(PricingData)
+#PricingData <- data.matrix(PricingData)
 
 # Please ENTER the dependent variable.
 dependent_variable = 14 # i.e Price
@@ -60,7 +60,7 @@ As a pilot, Amsterdam was chosen because of the "Airbnb friendly" policy of the 
 
 The data is collected from the official Airbnb website
 
-The credit card issuer has gathered information on `r nrow(ProjectData)` customers. The dataset contains information on `r length(independent_variables)` variables, including demographic factors, credit data, history of payment, and bill statements of credit card customers from April 2005 to September 2005, as well as information on the outcome: did the customer default or not?
+The credit card issuer has gathered information on `r nrow(PricingData)` customers. The dataset contains information on `r length(independent_variables)` variables, including demographic factors, credit data, history of payment, and bill statements of credit card customers from April 2005 to September 2005, as well as information on the outcome: did the customer default or not?
 
 Name                       | Description
 :--------------------------|:--------------------------------------------------------------------
@@ -84,7 +84,8 @@ Let's look into the data for a few customers. This is how the first `r min(max_d
 
 ```{r echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
 knitr::kable({
-  df <- t(head(round(PricingData[,independent_variables],2), max_data_report))
+#  df <- t(head(round(PricingData[,independent_variables],2), max_data_report))
+  df <- t(head(PricingData[,independent_variables], max_data_report))
   colnames(df) <- sprintf("%02d", 1:ncol(df))
   df
 })
