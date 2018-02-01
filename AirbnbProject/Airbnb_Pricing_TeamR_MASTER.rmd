@@ -1,7 +1,7 @@
 ---
 title: "Airbnb Pricing Tool"
 author: "Team R"
-date: "31 Januar 2018"
+date: "1 February 2018"
 output:
   html_document:
     css: ../AnalyticsStyles/default.css
@@ -73,7 +73,7 @@ Name                       | Description
 :--------------------------|:--------------------------------------------------------------------
 room_id                    | A unique number identifying an Airbnb listing. The listing has a URL on the Airbnb web site of http://airbnb.com/rooms/room_id
 host_id                    | A unique number identifying an Airbnb host. The host’s page has a URL on the Airbnb web site of http://airbnb.com/users/show/host_id
-room_type                  | One of 'Entire home' (1), Private room” (2), or “Shared room” (3)
+room_type                  | One of "Entire home" (1), "Private room" (2), or "Shared room" (3)
 neighborhood               | A subregion of the city or search area for which the survey is carried out *(In Amsterdam: Bijlmer Centrum, Bijlmer Oost, Bos en Lommer, Buitenveldert / Zuidas, Centrum Oost, Centrum West, De Aker / Nieuw Sloten, De Baarsjes / Oud West, De Pijp / Rivierenbuurt, Gaasperdam / Driemond, Geuzenveld / Slotermeer, Ijburg / Eiland Zeeburg, Noord Oost, Noord West, Noord-West / Noord-Midden, Oostelijk Havengebied / Indische Buurt, Osdorp, Oud Noord, Oud Oost, Slotervaart, Watergraafsmeer, Westerpark, Westpoort)
 reviews                    | The number of reviews that a listing has received. As 70% of visits end up with a review, the number of reviews can be used to estimate the number of visits. Note that such an estimate will not be reliable for an individual listing, but over a city as a whole it should be a useful metric of traffic
 overall_satisfaction       | The average rating (out of five) that the listing has received from those visitors who left a review
@@ -100,12 +100,15 @@ knitr::kable({
 
 # Overview Process Steps
 
-1. Prepare and split the data 
-2. Exploratory Data Analysis
-3. Building a Regression Model
-4. Validate Prediction Quality
+**Step 1 - Prepare and split the data**: At the end of this step, three cleaned up datasets should be ready before going to the next step: one set for the estimation, a second step for validation and a last set for testing.
 
-Let's follow these steps.
+**Step 2 - Exploratory Data Analysis**: In this step, a feeling can be established for the available data. Scatterplots, boxplots and correlation matrices can provide useful insights into the data that will help to build a better regression model.
+
+**Step 3 - Building a Regression Model**: To create the actual model, a suitable algorithm and respective parameters need to be chosen. Steps 3 and 4 are part of an iterative approach that will improve the outcome over time, as the parameters get tweaked. 
+
+**Step 4 - Validate Prediction Quality**: Different methods can be used to determine how good the model predicts a different set of listings (i.e. *validation dataset*).
+
+Only after following these steps, the resulting model can be used to predict the prices for new listings or the *testing dataset*. Let's follow these steps.
 
 ## Step 1: Prepare and split the data 
 As we aim to finally measure and report the performance of the models on **test data**, we split the data into an estimation sample and two validation samples - using some kind of randomized splitting technique. We used a split of 90% estimation, 5% validation, and 5% test data, in order to keep less than thousand listings for the validation and test sets, keeping them well manageable. While setting up the estimation and validation samples, we are careful to maintain the same balance of the dependent variable (price) categories as in the overall dataset.
@@ -137,7 +140,12 @@ In our case we use `r nrow(PricingData.estimation)` observations in the *estimat
 
 ## Step 2: Exploratory Data Analysis
 
-TODO: Correlation Matrix
+A few exploratory - and more importantly **preliminary** -  analyses have been created below; annotation omitted in this draft.
+
+```{r}
+thecor = round(cor(data.matrix(PricingData.estimation[c(4,8:12,14,18,19)])),2)
+iprint.df(round(thecor,2), scale=TRUE)
+```
 
 <!-- plot(PricingData.estimation$neighborhood, PricingData.estimation$price) -->
 ```{r echo=FALSE, fig.height=4.5}
