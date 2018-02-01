@@ -47,8 +47,8 @@ independent_variables = c(1:13,18:19) # use all the available attributes
 max_data_report = 10
 
 # Please ENTER the percentage of data used for estimation
-estimation_data_percent = 80
-validation_data_percent = 10
+estimation_data_percent = 90
+validation_data_percent = 5
 test_data_percent = 100-estimation_data_percent-validation_data_percent
 
 # Please ENTER 1 if you want to randomly split the data in estimation and validation/test
