@@ -140,7 +140,10 @@ In our case we use `r nrow(PricingData.estimation)` observations in the *estimat
 
 ## Step 2: Exploratory Data Analysis
 
-TODO: Correlation Matrix
+```{r}
+thecor = round(cor(data.matrix(PricingData.estimation[c(4,8:12,14,18,19)])),2)
+iprint.df(round(thecor,2), scale=TRUE)
+```
 
 <!-- plot(PricingData.estimation$neighborhood, PricingData.estimation$price) -->
 ```{r echo=FALSE, fig.height=4.5}
