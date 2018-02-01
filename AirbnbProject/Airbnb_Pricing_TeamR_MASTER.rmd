@@ -87,7 +87,7 @@ price                      | The price (in $US) for a night stay. In early surve
 
 
 
-Let's look into the data for a few customers. This is how the first `r min(max_data_report, nrow(PricingData))` out of the total of `r nrow(PricingData)` rows look like (transposed, for convenience):
+Let's look into the data for a few Airbnb listings. This is how the first `r min(max_data_report, nrow(PricingData))` out of the total of `r nrow(PricingData)` rows look like (transposed, for convenience):
 
 ```{r echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
 knitr::kable({
@@ -98,11 +98,12 @@ knitr::kable({
 })
 ```
 
-# A Process for Classification
+# Overview Process Steps
 
-1. 
-2. 
-3. 
+1. Prepare and split the data 
+2. Exploratory Data Analysis
+3. Building a Regression Model
+4. Validate Prediction Quality
 
 Let's follow these steps.
 
@@ -137,11 +138,13 @@ We typically refer to the three data samples as **estimation data** (`r estimati
 
 In our case we use `r nrow(PricingData.estimation)` observations in the *estimation data*, `r nrow(PricingData.validation)` in the *validation data*, and `r nrow(PricingData.test)` in the *test data*. 
 
-# Step 2: Exploratory Data Analysis
+## Step 2: Exploratory Data Analysis
+
+TODO: Correlation Matrix
 
 <!-- plot(PricingData.estimation$neighborhood, PricingData.estimation$price) -->
 ```{r echo=FALSE, fig.height=4.5}
-ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices")
+ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices") # + coord_cartesian(xlim = c(0, 1000))
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
@@ -153,7 +156,7 @@ ggplot(PricingData, aes(x=overall_satisfaction, y=price)) + geom_point() + ggtit
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
-ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterplot of Satisfaction and Prices")
+ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterplot of # of Bedrooms and Prices")
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
@@ -166,6 +169,12 @@ colnames(x1) <- c("Overall Satisfaction", "Accommodates", "Bedrooms") # 1:ncol(x
 
 swatch.default <- as.character(swatch())
 set_swatch(c(swatch.default[1], colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol(x1))))
-ggplot(melt(cbind.data.frame(n=1:nrow(x1), x1), id="n"), aes(x=n, y=value, colour=variable)) + geom_boxplot(fill="#FFFFFF", size=0.66, position=position_dodge(1.1*nrow(x1)))
+ggplot(melt(cbind.data.frame(n=1:nrow(x1), x1), id="n"), aes(x=n, y=value, colour=variable)) + geom_boxplot(fill="#FFFFFF", size=0.66, position=position_dodge(1.1*nrow(x1))) + ggtitle("Boxplot for numerical variables")
 set_swatch(swatch.default)
 ```
+
+## Step 3: Building a Regression Model
+
+## Step 4: Validate Prediction Quality
+
+# Results Analysis
