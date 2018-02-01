@@ -106,7 +106,7 @@ knitr::kable({
 
 Let's follow these steps.
 
-## Step 1: Split the data 
+## Step 1: Prepare and split the data 
 It is very important that you (or the data scientists working on the project) finally measure and report the performance of the models on **data that have not been used at all during the analysis, called "out-of-sample" or test data** (steps 2-5 above). The idea is that in practice we want our models to be used for predicting the class of observations/data we have not seen yet (i.e., "the future data"): although the performance of a classification method may be high in the data used to estimate the model parameters, it may be significantly poorer on data not used for parameter estimation, such as the **out-of-sample** (future) data. 
 
 This is why we split the data into an estimation sample and two validation samples  - using some kind of randomized splitting technique. The second validation data mimic out-of-sample data, and the performance on this validation set is a better approximation of the performance one should expect in practice from the selected classification method. The estimation data and the first validation data are used during steps 2-5 (with a few iterations of these steps), while the second validation data is only used once at the very end before making final business decisions based on the analysis. The split can be, for example, 80% estimation, 10% validation, and 10% test data, depending on the number of observations - for example, when there is a lot of data, you may only keep a few hundreds of them for the validation and test sets, and use the rest for estimation. 
@@ -136,3 +136,36 @@ PricingData.test = PricingData[ids.test,]
 We typically refer to the three data samples as **estimation data** (`r estimation_data_percent`% of the data in our case), **validation data**  (`r validation_data_percent`% of the data) and **test data** (the remaining `r 100 - estimation_data_percent  -  validation_data_percent`% of the data).
 
 In our case we use `r nrow(PricingData.estimation)` observations in the *estimation data*, `r nrow(PricingData.validation)` in the *validation data*, and `r nrow(PricingData.test)` in the *test data*. 
+
+# Step 2: Exploratory Data Analysis
+
+<!-- plot(PricingData.estimation$neighborhood, PricingData.estimation$price) -->
+```{r echo=FALSE, fig.height=4.5}
+ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices")
+```
+
+```{r echo=FALSE, fig.height=4.5}
+ggplot(PricingData, aes(x=neighborhood, y=price)) + geom_point() + ggtitle("Scatterplot of Neighborhood and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r echo=FALSE, fig.height=4.5}
+ggplot(PricingData, aes(x=overall_satisfaction, y=price)) + geom_point() + ggtitle("Scatterplot of Satisfaction and Prices")
+```
+
+```{r echo=FALSE, fig.height=4.5}
+ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterplot of Satisfaction and Prices")
+```
+
+```{r echo=FALSE, fig.height=4.5}
+# Please ENTER the selected independent variables for which to draw box plots.
+boxplots_independent_variables = c(10:12) # use only the PAY_ variables
+
+x1 = PricingData.estimation[,boxplots_independent_variables]
+
+colnames(x1) <- c("Overall Satisfaction", "Accommodates", "Bedrooms") # 1:ncol(x1)
+
+swatch.default <- as.character(swatch())
+set_swatch(c(swatch.default[1], colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol(x1))))
+ggplot(melt(cbind.data.frame(n=1:nrow(x1), x1), id="n"), aes(x=n, y=value, colour=variable)) + geom_boxplot(fill="#FFFFFF", size=0.66, position=position_dodge(1.1*nrow(x1)))
+set_swatch(swatch.default)
+```
