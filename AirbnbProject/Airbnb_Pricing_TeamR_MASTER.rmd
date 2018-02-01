@@ -73,7 +73,7 @@ Name                       | Description
 :--------------------------|:--------------------------------------------------------------------
 room_id                    | A unique number identifying an Airbnb listing. The listing has a URL on the Airbnb web site of http://airbnb.com/rooms/room_id
 host_id                    | A unique number identifying an Airbnb host. The host’s page has a URL on the Airbnb web site of http://airbnb.com/users/show/host_id
-room_type                  | One of “Entire home” (1), “Private room” (2), or “Shared room” (3)
+room_type                  | One of "Entire home" (1), "Private room" (2), or "Shared room" (3)
 neighborhood               | A subregion of the city or search area for which the survey is carried out *(In Amsterdam: Bijlmer Centrum, Bijlmer Oost, Bos en Lommer, Buitenveldert / Zuidas, Centrum Oost, Centrum West, De Aker / Nieuw Sloten, De Baarsjes / Oud West, De Pijp / Rivierenbuurt, Gaasperdam / Driemond, Geuzenveld / Slotermeer, Ijburg / Eiland Zeeburg, Noord Oost, Noord West, Noord-West / Noord-Midden, Oostelijk Havengebied / Indische Buurt, Osdorp, Oud Noord, Oud Oost, Slotervaart, Watergraafsmeer, Westerpark, Westpoort)
 reviews                    | The number of reviews that a listing has received. As 70% of visits end up with a review, the number of reviews can be used to estimate the number of visits. Note that such an estimate will not be reliable for an individual listing, but over a city as a whole it should be a useful metric of traffic
 overall_satisfaction       | The average rating (out of five) that the listing has received from those visitors who left a review
