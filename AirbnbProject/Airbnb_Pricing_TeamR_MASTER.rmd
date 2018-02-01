@@ -45,6 +45,15 @@ dependent_variable = 14 # i.e Price
 independent_variables = c(1:13,18:19) # use all the available attributes
 
 max_data_report = 10
+
+# Please ENTER the percentage of data used for estimation
+estimation_data_percent = 80
+validation_data_percent = 10
+test_data_percent = 100-estimation_data_percent-validation_data_percent
+
+# Please ENTER 1 if you want to randomly split the data in estimation and validation/test
+random_sampling = 1
+
 ```
 
 # The Business Context
@@ -58,9 +67,7 @@ As a pilot, Amsterdam was chosen because of the "Airbnb friendly" policy of the 
 # The Data
 (Data source: http://tomslee.net/airbnb-data-collection-get-the-data. We acknowledge the following: All material is copyright Tom Slee, licensed under a Creative Commons Attribution-NonCommercial 2.5 Canada License.)
 
-The data is collected from the official Airbnb website
-
-The credit card issuer has gathered information on `r nrow(PricingData)` customers. The dataset contains information on `r length(independent_variables)` variables, including demographic factors, credit data, history of payment, and bill statements of credit card customers from April 2005 to September 2005, as well as information on the outcome: did the customer default or not?
+The data is collected from the official Airbnb website by *Tom Slee* and provided as datasets for a large number of cities at different times. The considered dataset contains `r nrow(PricingData)` entries with `r length(independent_variables)` independent variables.
 
 Name                       | Description
 :--------------------------|:--------------------------------------------------------------------
@@ -90,3 +97,42 @@ knitr::kable({
   df
 })
 ```
+
+# A Process for Classification
+
+1. 
+2. 
+3. 
+
+Let's follow these steps.
+
+## Step 1: Split the data 
+It is very important that you (or the data scientists working on the project) finally measure and report the performance of the models on **data that have not been used at all during the analysis, called "out-of-sample" or test data** (steps 2-5 above). The idea is that in practice we want our models to be used for predicting the class of observations/data we have not seen yet (i.e., "the future data"): although the performance of a classification method may be high in the data used to estimate the model parameters, it may be significantly poorer on data not used for parameter estimation, such as the **out-of-sample** (future) data. 
+
+This is why we split the data into an estimation sample and two validation samples  - using some kind of randomized splitting technique. The second validation data mimic out-of-sample data, and the performance on this validation set is a better approximation of the performance one should expect in practice from the selected classification method. The estimation data and the first validation data are used during steps 2-5 (with a few iterations of these steps), while the second validation data is only used once at the very end before making final business decisions based on the analysis. The split can be, for example, 80% estimation, 10% validation, and 10% test data, depending on the number of observations - for example, when there is a lot of data, you may only keep a few hundreds of them for the validation and test sets, and use the rest for estimation. 
+
+While setting up the estimation and validation samples, you should also check that the same proportion of data from each class (i.e., customers who default versus not) are maintained in each sample. That is, you should maintain the same balance of the dependent variable categories as in the overall dataset. 
+
+For simplicity, in this note we will not iterate steps 2-5. In practice, however, we should usually iterate steps 2-5 a number of times using the first validation sample each time, and at the end make our final assessment of the classification model using the test sample only once. 
+
+```{r echo=FALSE}
+if (random_sampling){
+  ids.estimation = sample.int(nrow(PricingData),floor(estimation_data_percent*nrow(PricingData)/100))
+  PricingData.non_estimation = setdiff(1:nrow(PricingData),ids.estimation) #setdiff(x,y) returns the elements of x that are not in y
+  ids.validation=PricingData.non_estimation[sample.int(length(PricingData.non_estimation), floor(validation_data_percent/(validation_data_percent+test_data_percent)*length(PricingData.non_estimation)))]
+  } else {
+    ids.estimation=1:floor(estimation_data_percent*nrow(PricingData)/100)
+    PricingData.non_estimation = setdiff(1:nrow(PricingData),ids.estimation)
+    ids.validation = (tail(ids.estimation,1)+1):(tail(ids.estimation,1) + floor(validation_data_percent/(validation_data_percent+test_data_percent)*length(PricingData.non_estimation)))
+    }
+
+ids.test = setdiff(1:nrow(PricingData), union(ids.estimation,ids.validation))
+
+PricingData.estimation = PricingData[ids.estimation,]
+PricingData.validation = PricingData[ids.validation,]
+PricingData.test = PricingData[ids.test,]
+```
+
+We typically refer to the three data samples as **estimation data** (`r estimation_data_percent`% of the data in our case), **validation data**  (`r validation_data_percent`% of the data) and **test data** (the remaining `r 100 - estimation_data_percent  -  validation_data_percent`% of the data).
+
+In our case we use `r nrow(PricingData.estimation)` observations in the *estimation data*, `r nrow(PricingData.validation)` in the *validation data*, and `r nrow(PricingData.test)` in the *test data*. 
