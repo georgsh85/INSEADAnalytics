@@ -1,7 +1,7 @@
 ---
 title: "Airbnb Pricing Tool"
 author: "Team R"
-date: "31 Januar 2018"
+date: "1 February 2018"
 output:
   html_document:
     css: ../AnalyticsStyles/default.css
@@ -100,12 +100,15 @@ knitr::kable({
 
 # Overview Process Steps
 
-1. Prepare and split the data 
-2. Exploratory Data Analysis
-3. Building a Regression Model
-4. Validate Prediction Quality
+**Step 1 - Prepare and split the data**: At the end of this step, three cleaned up datasets should be ready before going to the next step: one set for the estimation, a second step for validation and a last set for testing.
 
-Let's follow these steps.
+**Step 2 - Exploratory Data Analysis**: In this step, a feeling can be established for the available data. Scatterplots, boxplots and correlation matrices can provide useful insights into the data that will help to build a better regression model.
+
+**Step 3 - Building a Regression Model**: To create the actual model, a suitable algorithm and respective parameters need to be chosen. Steps 3 and 4 are part of an iterative approach that will improve the outcome over time, as the parameters get tweaked. 
+
+**Step 4 - Validate Prediction Quality**: Different methods can be used to determine how good the model predicts a different set of listings (i.e. *validation dataset*).
+
+Only after following these steps, the resulting model can be used to predict the prices for new listings or the *testing dataset*. Let's follow these steps.
 
 ## Step 1: Prepare and split the data 
 It is very important that you (or the data scientists working on the project) finally measure and report the performance of the models on **data that have not been used at all during the analysis, called "out-of-sample" or test data** (steps 2-5 above). The idea is that in practice we want our models to be used for predicting the class of observations/data we have not seen yet (i.e., "the future data"): although the performance of a classification method may be high in the data used to estimate the model parameters, it may be significantly poorer on data not used for parameter estimation, such as the **out-of-sample** (future) data. 
@@ -139,6 +142,8 @@ We typically refer to the three data samples as **estimation data** (`r estimati
 In our case we use `r nrow(PricingData.estimation)` observations in the *estimation data*, `r nrow(PricingData.validation)` in the *validation data*, and `r nrow(PricingData.test)` in the *test data*. 
 
 ## Step 2: Exploratory Data Analysis
+
+A few exploratory - and more importantly **preliminary** -  analyses have been created below; annotation omitted in this draft.
 
 ```{r}
 thecor = round(cor(data.matrix(PricingData.estimation[c(4,8:12,14,18,19)])),2)
