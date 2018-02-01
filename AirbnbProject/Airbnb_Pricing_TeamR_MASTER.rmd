@@ -73,16 +73,16 @@ Name                       | Description
 :--------------------------|:--------------------------------------------------------------------
 room_id                    | A unique number identifying an Airbnb listing. The listing has a URL on the Airbnb web site of http://airbnb.com/rooms/room_id
 host_id                    | A unique number identifying an Airbnb host. The host’s page has a URL on the Airbnb web site of http://airbnb.com/users/show/host_id
-room_type                  | One of “Entire home/apt” 1), “Private room” (2), or “Shared room” (3)
-neighborhood               | a subregion of the city or search area for which the survey is carried out. For cities that have both, a neighbourhood is smaller than a borough. For some cities there is no neighbourhood information (**TBD** 1=graduate school, 2=university, 3=high school, 4=others, 5=unknown, 6=unknown)
-reviews                    | he number of reviews that a listing has received. Airbnb has said that 70% of visits end up with a review, so the number of reviews can be used to estimate the number of visits. Note that such an estimate will not be reliable for an individual listing (especially as reviews occasionally vanish from the site), but over a city as a whole it should be a useful metric of traffic
+room_type                  | One of “Entire home” (1), “Private room” (2), or “Shared room” (3)
+neighborhood               | A subregion of the city or search area for which the survey is carried out *(In Amsterdam: Bijlmer Centrum, Bijlmer Oost, Bos en Lommer, Buitenveldert / Zuidas, Centrum Oost, Centrum West, De Aker / Nieuw Sloten, De Baarsjes / Oud West, De Pijp / Rivierenbuurt, Gaasperdam / Driemond, Geuzenveld / Slotermeer, Ijburg / Eiland Zeeburg, Noord Oost, Noord West, Noord-West / Noord-Midden, Oostelijk Havengebied / Indische Buurt, Osdorp, Oud Noord, Oud Oost, Slotervaart, Watergraafsmeer, Westerpark, Westpoort)
+reviews                    | The number of reviews that a listing has received. As 70% of visits end up with a review, the number of reviews can be used to estimate the number of visits. Note that such an estimate will not be reliable for an individual listing, but over a city as a whole it should be a useful metric of traffic
 overall_satisfaction       | The average rating (out of five) that the listing has received from those visitors who left a review
 accommodates               | The number of guests a listing can accommodate
 bedrooms                   | The number of bedrooms a listing offers
 minstay                    | The minimum stay for a visit, as posted by the host
-latitude and longitude     | The latitude and longitude of the listing as posted on the Airbnb site: this may be off by a few hundred metres. I do not have a way to track individual listing locations with
+latitude and longitude     | The latitude and longitude of the listing as posted on the Airbnb site
 last_modified              | The date and time that the values were read from the Airbnb web site
-price                      | The price (in $US) for a night stay. In early surveys, there may be some values that were recorded by month 
+price                      | The price (in $US) for a night stay
 
 
 
@@ -147,7 +147,7 @@ iprint.df(round(thecor,2), scale=TRUE)
 
 <!-- plot(PricingData.estimation$neighborhood, PricingData.estimation$price) -->
 ```{r echo=FALSE, fig.height=4.5}
-ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices") # + coord_cartesian(xlim = c(0, 1000))
+ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices")  + coord_cartesian(xlim = c(0, 1500))
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
