@@ -180,6 +180,11 @@ set_swatch(swatch.default)
 
 ## Step 3: Building a Regression Model
 
+```{r echo=FALSE, fig.height=4.5}
+fit <- lm(price~room_type+reviews+neighborhood+overall_satisfaction+accommodates,data=PricingData.estimation)
+Prediction <- predict(fit,PricingData.validation)
+```
+
 ## Step 4: Validate Prediction Quality
 
 # Results Analysis
