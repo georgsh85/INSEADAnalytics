@@ -193,7 +193,7 @@ Prediction <- predict(fit,PricingData.validation)
 
 # Results Analysis
 Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
-Iterating our model and tweaking the analysis process, we chose to segment the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points.
+Iterating our model and tweaking the analysis process, we chose to segment the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points. 
 
 
 # Conclusion
