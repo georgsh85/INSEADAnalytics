@@ -153,6 +153,10 @@ ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histo
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
+table(PricingData.estimation$neighborhood)
+```
+
+```{r echo=FALSE, fig.height=4.5}
 ggplot(PricingData, aes(x=neighborhood, y=price)) + geom_point() + ggtitle("Scatterplot of Neighborhood and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
@@ -181,7 +185,7 @@ set_swatch(swatch.default)
 ## Step 3: Building a Regression Model
 
 ```{r echo=FALSE, fig.height=4.5}
-fit <- lm(price~room_type+reviews+neighborhood+overall_satisfaction+accommodates,data=PricingData.estimation)
+fit <- lm(scale(price)~room_type+reviews+neighborhood+overall_satisfaction+accommodates,data=PricingData.estimation)
 Prediction <- predict(fit,PricingData.validation)
 ```
 
