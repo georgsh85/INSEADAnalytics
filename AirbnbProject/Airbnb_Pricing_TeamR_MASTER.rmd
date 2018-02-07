@@ -224,7 +224,7 @@ fit.log.step <- stepAIC(fit.log, direction = "both")
 summary(fit.log.step)
 
 # Log-linear regression with interactions
-fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*bedrooms+bedrooms,data=PricingData.estimation.non0)
+fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*room_type+bedrooms,data=PricingData.estimation.non0)
 summary(fit.int)
 ```
 
