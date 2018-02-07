@@ -1,7 +1,7 @@
 ---
 title: "Airbnb Pricing Tool"
 author: "Team R"
-date: "1 February 2018"
+date: "February 10, 2018"
 output:
   html_document:
     css: ../AnalyticsStyles/default.css
