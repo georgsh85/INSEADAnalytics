@@ -57,7 +57,7 @@ random_sampling = 1
 ```
 
 # The Business Context
-AirBnB was founded in 2008 by *Brian Chesky*, *Joe Gebbia*, and *Nathan Blecharczyk* as *AirBed & Breakfast*, an online marketplace and hospitality service for short-term lodging. Over the past years, the share of professional hospitality providers has significantly increased and is now *crowding out* the private providers, threatening AirBnB's value proposition of *unique design and personal touch*. Within this context, the marketing department wants to run a campaign to attract more private providers. To do this, they requested the analytics department to create a tool that helps to attract potential landlords by helping them understand how much money they could earn with their respective apartment through AirBnb
+AirBnB was founded in 2008 by *Brian Chesky*, *Joe Gebbia*, and *Nathan Blecharczyk* as *AirBed & Breakfast*, an online marketplace and hospitality service for short-term lodging. Over the past years, the share of professional hospitality providers has significantly increased and is now *crowding out* the private providers, threatening AirBnB's value proposition of offering *unique design and personal touch*. Within this context, the marketing department wants to run a campaign to attract more private providers. To do this, they requested the analytics department to create a tool that helps attract potential landlords by helping them understand how much money they could earn with their respective apartments through AirBnb.
 
 As a pilot, Amsterdam was chosen because of the "AirBnB friendly" policy of the local regulators and the high number of short-term visitors. The proposed solution, however, is designed to be city-independent and therefore, an easily replicable process was designed, using *.rmd-Files* and *Github*.
 
@@ -192,8 +192,10 @@ Prediction <- predict(fit,PricingData.validation)
 ## Step 4: Validate Prediction Quality
 
 # Results Analysis
+Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
+
 
 # Conclusion
 In this project, we tried to predict the price per night of an accomodation, based on variables taken from our data source. As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars) would have a strong impact on price.
-To this point, we had difficulty in obtaining a high level of accuracy in our predictions.  
+To this point, we had difficulty in obtaining a high level of accuracy in our predictions.
 
