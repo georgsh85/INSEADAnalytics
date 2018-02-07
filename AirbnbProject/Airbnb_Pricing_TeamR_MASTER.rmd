@@ -1,5 +1,5 @@
 ---
-title: "Airbnb Pricing Tool"
+title: "AirBnB Pricing Tool"
 author: "Team R"
 date: "February 10, 2018"
 output:
@@ -63,9 +63,9 @@ PricingData <- subset(PricingData, room_type != "Shared room")
 ```
 
 # The Business Context
-Airbnb was founded in 2008 by *Brian Chesky*, *Joe Gebbia*, and *Nathan Blecharczyk* as *AirBed & Breakfast*, an online marketplace and hospitality service for short-term lodging. Over the past years, the share of professional hospitality providers has significantly increased and is now *crowding out* the private providers, threatening Airbnb's value proposition of *unique design and personal touch*. Within this context, the marketing department wants to run a campaign to attract more private providers. To do this, they requested the analytics department to create a tool that helps interested landlords to understand how much money they could earn with their respective apartment. 
+AirBnB was founded in 2008 by *Brian Chesky*, *Joe Gebbia*, and *Nathan Blecharczyk* as *AirBed & Breakfast*, an online marketplace and hospitality service for short-term lodging. Over the past years, the share of professional hospitality providers has significantly increased and is now *crowding out* the private providers, threatening AirBnB's value proposition of offering *unique design and personal touch*. Within this context, the marketing department wants to run a campaign to attract more private providers. To do this, they requested the analytics department to create a tool that helps attract potential landlords by helping them understand how much money they could earn with their respective apartments through AirBnb.
 
-As a pilot, Amsterdam was chosen because of the "Airbnb friendly" policy of the local regulators and the high number of short-term visitors. The proposed solution, however, is designed to be city-independent and therefore, an easily replicable process was designed, using *.rmd-Files* and *Github*.
+As a pilot, Amsterdam was chosen because of the "AirBnB friendly" policy of the local regulators and the high number of short-term visitors. The proposed solution, however, is designed to be city-independent and therefore, an easily replicable process was designed, using *.rmd-Files* and *Github*.
 
 
 <hr>\clearpage
@@ -73,12 +73,12 @@ As a pilot, Amsterdam was chosen because of the "Airbnb friendly" policy of the 
 # The Data
 (Data source: http://tomslee.net/airbnb-data-collection-get-the-data. We acknowledge the following: All material is copyright Tom Slee, licensed under a Creative Commons Attribution-NonCommercial 2.5 Canada License.)
 
-The data is collected from the official Airbnb website by *Tom Slee* and provided as datasets for a large number of cities at different times. The considered dataset contains `r nrow(PricingData)` entries with `r length(independent_variables)` independent variables.
+The data is collected from the official AirBnB website by *Tom Slee* and provided as datasets for a large number of cities at different times. The considered dataset contains `r nrow(PricingData)` entries with `r length(independent_variables)` independent variables.
 
 Name                       | Description
 :--------------------------|:--------------------------------------------------------------------
-room_id                    | A unique number identifying an Airbnb listing. The listing has a URL on the Airbnb web site of http://airbnb.com/rooms/room_id
-host_id                    | A unique number identifying an Airbnb host. The host’s page has a URL on the Airbnb web site of http://airbnb.com/users/show/host_id
+room_id                    | A unique number identifying an AirBnB listing. The listing has a URL on the AirBnB web site of http://airbnb.com/rooms/room_id
+host_id                    | A unique number identifying an AirBnB host. The host’s page has a URL on the AirBnB web site of http://airbnb.com/users/show/host_id
 room_type                  | One of "Entire home" (1), "Private room" (2), or "Shared room" (3)
 neighborhood               | A subregion of the city or search area for which the survey is carried out *(In Amsterdam: Bijlmer Centrum, Bijlmer Oost, Bos en Lommer, Buitenveldert / Zuidas, Centrum Oost, Centrum West, De Aker / Nieuw Sloten, De Baarsjes / Oud West, De Pijp / Rivierenbuurt, Gaasperdam / Driemond, Geuzenveld / Slotermeer, Ijburg / Eiland Zeeburg, Noord Oost, Noord West, Noord-West / Noord-Midden, Oostelijk Havengebied / Indische Buurt, Osdorp, Oud Noord, Oud Oost, Slotervaart, Watergraafsmeer, Westerpark, Westpoort)
 reviews                    | The number of reviews that a listing has received. As 70% of visits end up with a review, the number of reviews can be used to estimate the number of visits. Note that such an estimate will not be reliable for an individual listing, but over a city as a whole it should be a useful metric of traffic
@@ -86,14 +86,14 @@ overall_satisfaction       | The average rating (out of five) that the listing h
 accommodates               | The number of guests a listing can accommodate
 bedrooms                   | The number of bedrooms a listing offers
 minstay                    | The minimum stay for a visit, as posted by the host
-latitude and longitude     | The latitude and longitude of the listing as posted on the Airbnb site
-last_modified              | The date and time that the values were read from the Airbnb web site
+latitude and longitude     | The latitude and longitude of the listing as posted on the AirBnB site
+last_modified              | The date and time that the values were read from the AirBnB web site
 price                      | The price (in $US) for a night stay
 
 
 
 
-Let's look into the data for a few Airbnb listings. This is how the first `r min(max_data_report, nrow(PricingData))` out of the total of `r nrow(PricingData)` rows look like (transposed, for convenience):
+Let's look into the data for a few AirBnBlistings. This is how the first `r min(max_data_report, nrow(PricingData))` out of the total of `r nrow(PricingData)` rows look like (transposed, for convenience):
 
 ```{r echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
 knitr::kable({
@@ -231,8 +231,11 @@ summary(fit.int)
 ## Step 4: Validate Prediction Quality
 
 # Results Analysis
+Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
+Iterating our model and tweaking the analysis process, we chose to segment the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points. 
+
 
 # Conclusion
-In this project, we tried to predict the price per night of an accomodation, based on variables taken from our data source. As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars)
-To this point, we had difficulty in obtaining a high level of accuracy in our predictions.  
+In this project, we tried to predict the price per night of an accomodation, based on variables taken from our data source. As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars) would have a strong impact on price.
+To this point, we had difficulty in obtaining a high level of accuracy in our predictions.
 
