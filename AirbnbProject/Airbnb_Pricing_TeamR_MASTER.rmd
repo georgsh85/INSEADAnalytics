@@ -29,6 +29,7 @@ ggthemr('fresh')  # ggplot theme
 opts_knit$set(progress=FALSE, verbose=FALSE)
 opts_chunk$set(echo=FALSE, fig.align="center", fig.width=10, fig.height=6.2)
 options(knitr.kable.NA = '')
+library(MASS)
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -53,6 +54,11 @@ test_data_percent = 100-estimation_data_percent-validation_data_percent
 
 # Please ENTER 1 if you want to randomly split the data in estimation and validation/test
 random_sampling = 1
+
+# Please ENTER the maximum price for accomodation that shall be considered in the analysis
+cutoff = 1000
+
+PricingData <- subset(PricingData, room_type != "Shared room")
 
 ```
 
@@ -142,6 +148,7 @@ In our case we use `r nrow(PricingData.estimation)` observations in the *estimat
 
 A few exploratory - and more importantly **preliminary** -  analyses have been created below; annotation omitted in this draft.
 
+
 ```{r}
 thecor = round(cor(data.matrix(PricingData.estimation[c(4,8:12,14,18,19)])),2)
 iprint.df(round(thecor,2), scale=TRUE)
@@ -149,12 +156,26 @@ iprint.df(round(thecor,2), scale=TRUE)
 
 <!-- plot(PricingData.estimation$neighborhood, PricingData.estimation$price) -->
 ```{r echo=FALSE, fig.height=4.5}
-ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices")  + coord_cartesian(xlim = c(0, 1500))
+ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices")
+```
+
+In case the data contains outliers (defined as listings with prices >= `r cutoff`), we want to exclude these extraordinarily expensive listings:
+
+```{r}
+PricingData.estimation <- subset(PricingData.estimation, price<cutoff)
+ggplot(PricingData.estimation, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices")
+
+ggplot(PricingData.estimation, aes(x=reviews, y=price)) + geom_point() + ggtitle("Scatterplot of Reviews and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
-table(PricingData.estimation$neighborhood)
+# TODO
+occurences <- table(PricingData.estimation$neighborhood)
+occurences
+occurences <- occurences<=100
 ```
+
+We will exclude data from neighborhoods that are not at least represented with 100 listings.
 
 ```{r echo=FALSE, fig.height=4.5}
 ggplot(PricingData, aes(x=neighborhood, y=price)) + geom_point() + ggtitle("Scatterplot of Neighborhood and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
@@ -185,8 +206,26 @@ set_swatch(swatch.default)
 ## Step 3: Building a Regression Model
 
 ```{r echo=FALSE, fig.height=4.5}
-fit <- lm(scale(price)~room_type+reviews+neighborhood+overall_satisfaction+accommodates,data=PricingData.estimation)
+# Data splitting based on numbers of reviews
+PricingData.estimation.0 <- subset(PricingData.estimation, reviews == 0)
+PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 2)
+
+# linear regression
+fit <- lm(scale(price)~room_type+neighborhood+reviews+overall_satisfaction+accommodates+bedrooms,data=PricingData.estimation.non0)
+summary(fit)
+fit.step <- stepAIC(fit,direction = "both")
+summary(fit.step)
 Prediction <- predict(fit,PricingData.validation)
+
+# Log-linear regression
+fit.log <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)+bedrooms,data=PricingData.estimation.non0)
+summary(fit.log)
+fit.log.step <- stepAIC(fit.log, direction = "both")
+summary(fit.log.step)
+
+# Log-linear regression with interactions
+fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*bedrooms+bedrooms,data=PricingData.estimation.non0)
+summary(fit.int)
 ```
 
 ## Step 4: Validate Prediction Quality
