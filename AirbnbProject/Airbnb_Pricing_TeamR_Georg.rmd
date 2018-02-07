@@ -1,0 +1,183 @@
+---
+title: "Airbnb Pricing Tool"
+author: "Team R"
+date: "31 Januar 2018"
+output:
+  html_document:
+    css: ../AnalyticsStyles/default.css
+    theme: paper
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+  pdf_document:
+    includes:
+      in_header: ../AnalyticsStyles/default.sty
+always_allow_html: yes
+---
+
+<!-- rmarkdown::render("AirbnbProject/Airbnb_Pricing_TeamR_MASTER.rmd") -->
+
+```{r echo=FALSE, message=FALSE}
+make_pdf_file = 0 # SET THIS TO 1 IF WE COMPILE PDF FILE, 0 OTHERWISE (FOR HTML)
+
+source("../AnalyticsLibraries/library.R")
+source("../AnalyticsLibraries/heatmapOutput.R")
+
+# Package options
+ggthemr('fresh')  # ggplot theme
+opts_knit$set(progress=FALSE, verbose=FALSE)
+opts_chunk$set(echo=FALSE, fig.align="center", fig.width=10, fig.height=6.2)
+options(knitr.kable.NA = '')
+```
+
+```{r echo=FALSE, message=FALSE}
+# Please ENTER the filename
+datafile_name = "Data/tomslee_airbnb_amsterdam_1476_2017-07-22.csv"
+PricingData <- read.csv(datafile_name, stringsAsFactors = TRUE)
+# We turn the data into data.matrix class so that we can easier manipulate it
+#PricingData <- data.matrix(PricingData)
+
+# Please ENTER the dependent variable.
+dependent_variable = 14 # i.e Price
+
+# Please ENTER the attributes to use as independent variables. 
+independent_variables = c(1:13,18:19) # use all the available attributes
+
+max_data_report = 10
+
+# Please ENTER the percentage of data used for estimation
+estimation_data_percent = 80
+validation_data_percent = 10
+test_data_percent = 100-estimation_data_percent-validation_data_percent
+
+# Please ENTER 1 if you want to randomly split the data in estimation and validation/test
+random_sampling = 1
+
+```
+
+# The Business Context
+Airbnb was founded in 2008 by *Brian Chesky*, *Joe Gebbia*, and *Nathan Blecharczyk* as *AirBed & Breakfast*, an online marketplace and hospitality service for short-term lodging. Over the past years, the share of professional hospitality providers has significantly increased and is now *crowding out* the private providers, threatening Airbnb's value proposition of *unique design and personal touch*. Within this context, the marketing department wants to run a campaign to attract more private providers. To do this, they requested the analytics department to create a tool that helps interested landlords to understand how much money they could earn with their respective apartment. 
+
+As a pilot, Amsterdam was chosen because of the "Airbnb friendly" policy of the local regulators and the high number of short-term visitors. The proposed solution, however, is designed to be city-independent and therefore, an easily replicable process was designed, using *.rmd-Files* and *Github*.
+
+
+<hr>\clearpage
+
+# The Data
+(Data source: http://tomslee.net/airbnb-data-collection-get-the-data. We acknowledge the following: All material is copyright Tom Slee, licensed under a Creative Commons Attribution-NonCommercial 2.5 Canada License.)
+
+The data is collected from the official Airbnb website by *Tom Slee* and provided as datasets for a large number of cities at different times. The considered dataset contains `r nrow(PricingData)` entries with `r length(independent_variables)` independent variables.
+
+Name                       | Description
+:--------------------------|:--------------------------------------------------------------------
+room_id                    | A unique number identifying an Airbnb listing. The listing has a URL on the Airbnb web site of http://airbnb.com/rooms/room_id
+host_id                    | A unique number identifying an Airbnb host. The host’s page has a URL on the Airbnb web site of http://airbnb.com/users/show/host_id
+room_type                  | One of “Entire home/apt” 1), “Private room” (2), or “Shared room” (3)
+neighborhood               | a subregion of the city or search area for which the survey is carried out. For cities that have both, a neighbourhood is smaller than a borough. For some cities there is no neighbourhood information (**TBD** 1=graduate school, 2=university, 3=high school, 4=others, 5=unknown, 6=unknown)
+reviews                    | he number of reviews that a listing has received. Airbnb has said that 70% of visits end up with a review, so the number of reviews can be used to estimate the number of visits. Note that such an estimate will not be reliable for an individual listing (especially as reviews occasionally vanish from the site), but over a city as a whole it should be a useful metric of traffic
+overall_satisfaction       | The average rating (out of five) that the listing has received from those visitors who left a review
+accommodates               | The number of guests a listing can accommodate
+bedrooms                   | The number of bedrooms a listing offers
+minstay                    | The minimum stay for a visit, as posted by the host
+latitude and longitude     | The latitude and longitude of the listing as posted on the Airbnb site: this may be off by a few hundred metres. I do not have a way to track individual listing locations with
+last_modified              | The date and time that the values were read from the Airbnb web site
+price                      | The price (in $US) for a night stay. In early surveys, there may be some values that were recorded by month 
+
+
+
+
+Let's look into the data for a few Airbnb listings. This is how the first `r min(max_data_report, nrow(PricingData))` out of the total of `r nrow(PricingData)` rows look like (transposed, for convenience):
+
+```{r echo=FALSE, message=FALSE, prompt=FALSE, results='asis'}
+knitr::kable({
+#  df <- t(head(round(PricingData[,independent_variables],2), max_data_report))
+  df <- t(head(PricingData[,independent_variables], max_data_report))
+  colnames(df) <- sprintf("%02d", 1:ncol(df))
+  df
+})
+```
+
+# Overview Process Steps
+
+1. Prepare and split the data 
+2. Exploratory Data Analysis
+3. Building a Regression Model
+4. Validate Prediction Quality
+
+Let's follow these steps.
+
+## Step 1: Prepare and split the data 
+It is very important that you (or the data scientists working on the project) finally measure and report the performance of the models on **data that have not been used at all during the analysis, called "out-of-sample" or test data** (steps 2-5 above). The idea is that in practice we want our models to be used for predicting the class of observations/data we have not seen yet (i.e., "the future data"): although the performance of a classification method may be high in the data used to estimate the model parameters, it may be significantly poorer on data not used for parameter estimation, such as the **out-of-sample** (future) data. 
+
+This is why we split the data into an estimation sample and two validation samples  - using some kind of randomized splitting technique. The second validation data mimic out-of-sample data, and the performance on this validation set is a better approximation of the performance one should expect in practice from the selected classification method. The estimation data and the first validation data are used during steps 2-5 (with a few iterations of these steps), while the second validation data is only used once at the very end before making final business decisions based on the analysis. The split can be, for example, 80% estimation, 10% validation, and 10% test data, depending on the number of observations - for example, when there is a lot of data, you may only keep a few hundreds of them for the validation and test sets, and use the rest for estimation. 
+
+While setting up the estimation and validation samples, you should also check that the same proportion of data from each class (i.e., customers who default versus not) are maintained in each sample. That is, you should maintain the same balance of the dependent variable categories as in the overall dataset. 
+
+For simplicity, in this note we will not iterate steps 2-5. In practice, however, we should usually iterate steps 2-5 a number of times using the first validation sample each time, and at the end make our final assessment of the classification model using the test sample only once. 
+
+```{r echo=FALSE}
+if (random_sampling){
+  ids.estimation = sample.int(nrow(PricingData),floor(estimation_data_percent*nrow(PricingData)/100))
+  PricingData.non_estimation = setdiff(1:nrow(PricingData),ids.estimation) #setdiff(x,y) returns the elements of x that are not in y
+  ids.validation=PricingData.non_estimation[sample.int(length(PricingData.non_estimation), floor(validation_data_percent/(validation_data_percent+test_data_percent)*length(PricingData.non_estimation)))]
+  } else {
+    ids.estimation=1:floor(estimation_data_percent*nrow(PricingData)/100)
+    PricingData.non_estimation = setdiff(1:nrow(PricingData),ids.estimation)
+    ids.validation = (tail(ids.estimation,1)+1):(tail(ids.estimation,1) + floor(validation_data_percent/(validation_data_percent+test_data_percent)*length(PricingData.non_estimation)))
+    }
+
+ids.test = setdiff(1:nrow(PricingData), union(ids.estimation,ids.validation))
+
+PricingData.estimation = PricingData[ids.estimation,]
+PricingData.validation = PricingData[ids.validation,]
+PricingData.test = PricingData[ids.test,]
+```
+
+We typically refer to the three data samples as **estimation data** (`r estimation_data_percent`% of the data in our case), **validation data**  (`r validation_data_percent`% of the data) and **test data** (the remaining `r 100 - estimation_data_percent  -  validation_data_percent`% of the data).
+
+In our case we use `r nrow(PricingData.estimation)` observations in the *estimation data*, `r nrow(PricingData.validation)` in the *validation data*, and `r nrow(PricingData.test)` in the *test data*. 
+
+## Step 2: Exploratory Data Analysis
+
+```{r}
+thecor = round(cor(data.matrix(PricingData.estimation[c(4,8:12,14,18,19)])),2)
+iprint.df(round(thecor,2), scale=TRUE)
+```
+
+<!-- plot(PricingData.estimation$neighborhood, PricingData.estimation$price) -->
+```{r echo=FALSE, fig.height=4.5}
+ggplot(PricingData, aes(x=price)) + geom_histogram(binwidth=50) + ggtitle("Histogram of Prices") # + coord_cartesian(xlim = c(0, 1000))
+```
+
+```{r echo=FALSE, fig.height=4.5}
+ggplot(PricingData, aes(x=neighborhood, y=price)) + geom_point() + ggtitle("Scatterplot of Neighborhood and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r echo=FALSE, fig.height=4.5}
+ggplot(PricingData, aes(x=overall_satisfaction, y=price)) + geom_point() + ggtitle("Scatterplot of Satisfaction and Prices")
+```
+
+```{r echo=FALSE, fig.height=4.5}
+ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterplot of # of Bedrooms and Prices")
+```
+
+```{r echo=FALSE, fig.height=4.5}
+# Please ENTER the selected independent variables for which to draw box plots.
+boxplots_independent_variables = c(10:12) # use only the PAY_ variables
+
+x1 = PricingData.estimation[,boxplots_independent_variables]
+
+colnames(x1) <- c("Overall Satisfaction", "Accommodates", "Bedrooms") # 1:ncol(x1)
+
+swatch.default <- as.character(swatch())
+set_swatch(c(swatch.default[1], colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol(x1))))
+ggplot(melt(cbind.data.frame(n=1:nrow(x1), x1), id="n"), aes(x=n, y=value, colour=variable)) + geom_boxplot(fill="#FFFFFF", size=0.66, position=position_dodge(1.1*nrow(x1))) + ggtitle("Boxplot for numerical variables")
+set_swatch(swatch.default)
+```
+
+## Step 3: Building a Regression Model
+
+## Step 4: Validate Prediction Quality
+
+# Results Analysis
