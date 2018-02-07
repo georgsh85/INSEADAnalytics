@@ -1,7 +1,7 @@
 ---
 title: "Airbnb Pricing Tool"
 author: "Team R"
-date: "1 February 2018"
+date: "February 10, 2018"
 output:
   html_document:
     css: ../AnalyticsStyles/default.css
@@ -192,3 +192,8 @@ Prediction <- predict(fit,PricingData.validation)
 ## Step 4: Validate Prediction Quality
 
 # Results Analysis
+
+# Conclusion
+In this project, we tried to predict the price per night of an accomodation, based on variables taken from our data source. As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars)
+To this point, we had difficulty in obtaining a high level of accuracy in our predictions.  
+
