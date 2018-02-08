@@ -263,6 +263,7 @@ summary(fit.log.step)
 ```{r echo=FALSE, fig.height=4.5}
 # Log-linear regression with interactions
 fit.int <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)*log(bedrooms)+log(bedrooms),data=PricingData.estimation.non0)
+summary(fit.int)
 fit.int.step <- stepAIC(fit.int, direction = "both")
 summary(fit.int.step)
 ```
@@ -274,8 +275,8 @@ summary(fit.int.step)
 ```{r echo=FALSE, fig.height=4.5}
 predicted.prices.testing<-predict(fit.step, PricingData.test) #predict the prices of the listings left for testing the model
 percent.errors <- abs((PricingData.test$price-predicted.prices.testing)/PricingData.test$price)*100 #calculate absolute percentage errors
-mean(percent.errors) #display Mean Absolute Percentage Error (MAPE)
 ```
+The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors),digits=2) `%.
 
 ### Log-Linear Regression
 
@@ -283,8 +284,8 @@ mean(percent.errors) #display Mean Absolute Percentage Error (MAPE)
 # repeat the same for the log model
 predicted.prices.testing.log<-exp(predict(fit.log.step, PricingData.test))
 percent.errors.log <- abs((PricingData.test$price-predicted.prices.testing.log)/PricingData.test$price)*100
-mean(percent.errors.log)
 ```
+The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors.log),digits=2) `%.
 
 ### Log-Linear Regression with Interactions
 
@@ -292,8 +293,8 @@ mean(percent.errors.log)
 # repeat the same for the log model
 predicted.prices.testing.int<-exp(predict(fit.int.step, PricingData.test))
 percent.errors.int <- abs((PricingData.test$price-predicted.prices.testing.int)/PricingData.test$price)*100
-mean(percent.errors.int)
 ```
+The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors.int),digits=2) `%.
 
 # Results Analysis
 Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
