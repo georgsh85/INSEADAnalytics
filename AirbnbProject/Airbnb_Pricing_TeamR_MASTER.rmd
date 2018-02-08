@@ -168,17 +168,11 @@ thecor = round(cor(data.matrix(PricingData.estimation[c(4,8:12,14,18,19)])),2)
 iprint.df(round(thecor,2), scale=TRUE)
 ```
 
+### Scatterplots
+
 ```{r}
 ggplot(PricingData.estimation, aes(x=reviews, y=price)) + geom_point() + ggtitle("Scatterplot of Reviews and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-
-```{r echo=FALSE, fig.height=4.5}
-# Determine all neighborhoods that are "under-represented" and remove from estimation data
-occurences <- table(PricingData.estimation$neighborhood)
-PricingData.estimation <- subset(PricingData.estimation, neighborhood %in% names(occurences[occurences >= cutoff.neighborhood]))
-```
-
-We will exclude data from neighborhoods that are not at least represented with 100 listings.
 
 ```{r echo=FALSE, fig.height=4.5}
 ggplot(PricingData, aes(x=neighborhood, y=price)) + geom_point() + ggtitle("Scatterplot of Neighborhood and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
@@ -190,6 +184,20 @@ ggplot(PricingData, aes(x=overall_satisfaction, y=price)) + geom_point() + ggtit
 
 ```{r echo=FALSE, fig.height=4.5}
 ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterplot of # of Bedrooms and Prices")
+```
+
+### Neighborhoods
+
+We will exclude data from neighborhoods that are not at least represented with `r cutoff.neighborhood` listings.
+
+```{r}
+table(PricingData.estimation$neighborhood)
+```
+
+```{r echo=FALSE, fig.height=4.5}
+# Determine all neighborhoods that are "under-represented" and remove from estimation data
+occurences <- table(PricingData.estimation$neighborhood)
+PricingData.estimation <- subset(PricingData.estimation, neighborhood %in% names(occurences[occurences >= cutoff.neighborhood]))
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
