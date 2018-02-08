@@ -59,6 +59,7 @@ random_sampling = 1
 cutoff.price = 1000
 # Please ENTER the minimum listings per neighborhood
 cutoff.neighborhood = 100
+
 ```
 
 # The Business Context
@@ -220,6 +221,11 @@ set_swatch(swatch.default)
 # Data splitting based on numbers of reviews
 PricingData.estimation.0 <- subset(PricingData.estimation, reviews == 0)
 PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 2)
+#bedrooms <- cut(bedrooms, breaks = c(0.5,1.5,2.5,3.5,4.5,5.5,max(x)),labels = c("1","2","3","4","5", "5+"), include.lowest = TRUE)
+
+# Data splitting to exclude 0-bedroom apartments
+PricingData.estimation.reviewed <- PricingData.estimation.non0
+PricingData.estimation.non0 <- subset(PricingData.estimation.reviewed, bedrooms > 0)
 
 # linear regression
 fit <- lm(scale(price)~room_type+neighborhood+reviews+overall_satisfaction+accommodates+bedrooms,data=PricingData.estimation.non0)
@@ -235,11 +241,26 @@ fit.log.step <- stepAIC(fit.log, direction = "both")
 summary(fit.log.step)
 
 # Log-linear regression with interactions
-fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*room_type+bedrooms,data=PricingData.estimation.non0)
+#fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*bedrooms+bedrooms,data=PricingData.estimation.non0)
+fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*log(bedrooms)+log(bedrooms),data=PricingData.estimation.non0)
 summary(fit.int)
 ```
 
 ## Step 4: Validate Prediction Quality
+
+```{r echo=FALSE, fig.height=4.5}
+predicted.prices.testing<-predict(fit, PricingData.test) #predict the prices of the listings left for testing the model
+percent.errors <- abs((PricingData.test$price-predicted.prices.testing)/PricingData.test$price)*100 #calculate absolute percentage errors
+mean(percent.errors) #display Mean Absolute Percentage Error (MAPE)
+# repeat the same for the log model
+predicted.prices.testing.log<-exp(predict(fit.log, PricingData.test))
+percent.errors.log <- abs((PricingData.test$price-predicted.prices.testing.log)/PricingData.test$price)*100
+mean(percent.errors.log)
+# repeat the same for the log model
+predicted.prices.testing.int<-exp(predict(fit.log, PricingData.test))
+percent.errors.int <- abs((PricingData.test$price-predicted.prices.testing.int)/PricingData.test$price)*100
+mean(percent.errors.int)
+```
 
 # Results Analysis
 Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
