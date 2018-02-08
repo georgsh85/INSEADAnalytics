@@ -203,12 +203,14 @@ colnames(occurences)<-c("Neighborhood","Count")
 ggplot(occurences, aes(x=Neighborhood)) + geom_bar(data=subset(occurences, Count>=cutoff.neighborhood), aes(y=Count),stat="identity") + geom_bar(data=subset(occurences, Count<cutoff.neighborhood), aes(y=Count),stat="identity", fill="red") + geom_hline(yintercept=cutoff.neighborhood, color="green") + ggtitle("Count of Neighborhood") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-This cutoff affects a total of `r sum(subset(occurences, Count<cutoff.neighborhood)$Count) ` listings in our dataset (`r round((sum(subset(occurences, Count<cutoff.neighborhood)$Count))/sum(occurences$Count)*100,digits=2) `%).
+This cutoff affects a total of `r sum(subset(occurences, Count<cutoff.neighborhood)$Count) ` listings in our *estimation dataset* (`r round((sum(subset(occurences, Count<cutoff.neighborhood)$Count))/sum(occurences$Count)*100,digits=2) `%).
 
 ```{r echo=FALSE, fig.height=4.5}
 # Determine all neighborhoods that are "under-represented" and remove from estimation data
 occurences <- table(PricingData.estimation$neighborhood)
 PricingData.estimation <- subset(PricingData.estimation, neighborhood %in% names(occurences[occurences >= cutoff.neighborhood]))
+PricingData.validation <- subset(PricingData.validation, neighborhood %in% names(occurences[occurences >= cutoff.neighborhood]))
+PricingData.test <- subset(PricingData.test, neighborhood %in% names(occurences[occurences >= cutoff.neighborhood]))
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
