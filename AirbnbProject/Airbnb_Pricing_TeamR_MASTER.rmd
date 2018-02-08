@@ -169,10 +169,9 @@ ggplot(PricingData.estimation, aes(x=reviews, y=price)) + geom_point() + ggtitle
 ```
 
 ```{r echo=FALSE, fig.height=4.5}
-# TODO
+# Determine all neighborhoods that are "under-represented" and remove from estimation data
 occurences <- table(PricingData.estimation$neighborhood)
-occurences
-occurences <- occurences<=100
+PricingData.estimation <- subset(PricingData.estimation, neighborhood %in% names(occurences[occurences >= 100]))
 ```
 
 We will exclude data from neighborhoods that are not at least represented with 100 listings.
