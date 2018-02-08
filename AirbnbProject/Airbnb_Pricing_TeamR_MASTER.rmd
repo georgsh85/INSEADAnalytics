@@ -216,6 +216,9 @@ ggplot(melt(cbind.data.frame(n=1:nrow(x1), x1), id="n"), aes(x=n, y=value, colou
 set_swatch(swatch.default)
 ```
 
+A simple visualization tool to assess the discriminatory power of the independent variables are the box plots. A box plot visually indicates simple summary statistics of an independent variable (e.g. mean, median, top and bottom quantiles, min, max, etc.). For example consider the box plots for our estimation data for the numerical values.
+
+
 ## Step 3: Building a Regression Model
 
 ```{r echo=FALSE, fig.height=4.5}
