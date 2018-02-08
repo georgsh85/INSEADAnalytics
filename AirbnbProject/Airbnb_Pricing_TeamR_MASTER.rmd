@@ -114,7 +114,7 @@ Only after following these steps, the resulting model can be used to predict the
 
 ## Step 1: Prepare and split the data 
 
-Knowing that only a minor share of all listings are shared rooms (`r round(table(PricingData$room_type)["Shared room"]/nrow(PricingData)*100, digits=2) `% of all listings in this dataset), the team decided to remove these listings from the data. This will reduce the current dataset to `r nrow(PricingData) - table(PricingData$room_type)["Shared room"] ` lisitings.
+Knowing that only a minor share of all listings are shared rooms (`r round(table(PricingData$room_type)["Shared room"]/nrow(PricingData)*100, digits=2) `% of all listings in this dataset), the team decided to remove these listings from the data. This will reduce the current dataset to `r nrow(PricingData) - table(PricingData$room_type)["Shared room"] ` listings.
 ```{r echo=FALSE}
 PricingData <- subset(PricingData, room_type != "Shared room")
 ```
@@ -191,8 +191,12 @@ ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterp
 We will exclude data from neighborhoods that are not at least represented with `r cutoff.neighborhood` listings.
 
 ```{r}
-table(PricingData.estimation$neighborhood)
+occurences <- as.data.frame(table(PricingData.estimation$neighborhood))
+colnames(occurences)<-c("Neighborhood","Count")
+ggplot(occurences, aes(x=Neighborhood)) + geom_bar(data=subset(occurences, Count>=cutoff.neighborhood), aes(y=Count),stat="identity") + geom_bar(data=subset(occurences, Count<cutoff.neighborhood), aes(y=Count),stat="identity", fill="red") + geom_hline(yintercept=cutoff.neighborhood, color="green") + ggtitle("Count of Neighborhood") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
+
+This cutoff affects a total of `r sum(subset(occurences, Count<cutoff.neighborhood)$Count) ` listings in our dataset (`r round((sum(subset(occurences, Count<cutoff.neighborhood)$Count))/sum(occurences$Count)*100,digits=2) `%).
 
 ```{r echo=FALSE, fig.height=4.5}
 # Determine all neighborhoods that are "under-represented" and remove from estimation data
