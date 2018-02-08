@@ -169,13 +169,25 @@ PricingData.estimation <- subset(PricingData.estimation, price<cutoff.price)
 ggplot(PricingData.estimation, aes(x=price)) + geom_histogram(binwidth=25) + ggtitle("Histogram of Prices")
 ```
 
+We can notice a high concentration of accomodation prices between 100 and 200 USD.
+
 ### Correlation matrix
 ```{r}
 thecor = round(cor(data.matrix(PricingData.estimation[c(4,8:12,14,18,19)])),2)
 iprint.df(round(thecor,2), scale=TRUE)
 ```
 
+A correlation matrix is a table showing correlation coefficients between sets of variables. This allows us to identify pairs with higher correlations: these appear to be the following pairs:
+overall satisfaction - reviews
+bedrooms - accomodates
+These two pairs seem to overlap in their definitions
+price - accomodates
+price - bedrooms
+The final two pairs seem to be similar, but indidcate that there is a relationship between the price of an accomodation and the number of people or bedrooms included in the lodging.
+
 ### Scatterplots
+
+Scatter plots are used to plot data points on a horizontal and a vertical axis in the attempt to show how much one variable is affected by another. In this case, we plotted Reviews vs Price (which is the main focus of our research).
 
 ```{r}
 ggplot(PricingData.estimation, aes(x=reviews, y=price)) + geom_point() + ggtitle("Scatterplot of Reviews and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
@@ -185,13 +197,20 @@ ggplot(PricingData.estimation, aes(x=reviews, y=price)) + geom_point() + ggtitle
 ggplot(PricingData, aes(x=neighborhood, y=price)) + geom_point() + ggtitle("Scatterplot of Neighborhood and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
+This scatterplot shows the price versus the neighborhoods. We can see that some neighborhoods have more properties available than others, and we can observe the disparity in pricing.
+
 ```{r echo=FALSE, fig.height=4.5}
 ggplot(PricingData, aes(x=overall_satisfaction, y=price)) + geom_point() + ggtitle("Scatterplot of Satisfaction and Prices")
 ```
 
+This scatterplot shows the price versus the satisfaction. Again, we can see that some satisfaction scores occur more often than other.
+
 ```{r echo=FALSE, fig.height=4.5}
 ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterplot of # of Bedrooms and Prices")
 ```
+
+This scatterplot shows the price versus the number of bedrooms.
+
 
 ### Neighborhoods
 
