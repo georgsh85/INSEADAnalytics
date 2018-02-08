@@ -249,8 +249,9 @@ summary(fit.log.step)
 
 # Log-linear regression with interactions
 #fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*bedrooms+bedrooms,data=PricingData.estimation.non0)
-fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*log(bedrooms)+log(bedrooms),data=PricingData.estimation.non0)
-summary(fit.int)
+fit.int <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)*log(bedrooms)+log(bedrooms),data=PricingData.estimation.non0)
+fit.int.step <- stepAIC(fit.log, direction = "both")
+summary(fit.int.step)
 ```
 
 ## Step 4: Validate Prediction Quality
