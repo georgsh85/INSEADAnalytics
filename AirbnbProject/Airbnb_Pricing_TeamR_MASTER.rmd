@@ -190,7 +190,7 @@ ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterp
 
 ### Neighborhoods
 
-We will exclude data from neighborhoods that are not at least represented with `r cutoff.neighborhood` listings.
+We will exclude data from neighborhoods that are not at least represented with `r cutoff.neighborhood` listings. Below is the lists of neighborhoods and their incidence in our data pool.
 
 ```{r}
 table(PricingData.estimation$neighborhood)
