@@ -120,6 +120,12 @@ Knowing that only a minor share of all listings are shared rooms (`r round(table
 PricingData <- subset(PricingData, room_type != "Shared room")
 ```
 
+In addition to that, the dataset contains listings for which number of bedrooms was set to 0 (`r nrow(subset(PricingData, bedrooms==0))` or `r round(nrow(subset(PricingData, bedrooms==0))/nrow(PricingData)*100, digits=2)`%). These datapoints are removed from the dataset.
+
+```{r echo=FALSE}
+PricingData <- subset(PricingData, bedrooms > 0)
+```
+
 As we aim to finally measure and report the performance of the models on **test data**, we split the data into an estimation sample and two validation samples - using some kind of randomized splitting technique. We used a split of 90% estimation, 5% validation, and 5% test data, in order to keep less than thousand listings for the validation and test sets, keeping them well manageable. While setting up the estimation and validation samples, we are careful to maintain the same balance of the dependent variable (price) categories as in the overall dataset.
 
 The second validation data mimic out-of-sample data, and the performance on this validation set is a better approximation of the performance one should expect in practice from the model. In practice, one should usually iterate the model several times using the first validation sample each time, and at the end make the final assessment of the model using the test sample. In this note, we used less iterations for simplicity. Finally, the second validation data is only used once at the very end before making final business decisions based on the analysis. 
@@ -230,10 +236,6 @@ PricingData.estimation.0 <- subset(PricingData.estimation, reviews == 0)
 PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 2)
 #bedrooms <- cut(bedrooms, breaks = c(0.5,1.5,2.5,3.5,4.5,5.5,max(x)),labels = c("1","2","3","4","5", "5+"), include.lowest = TRUE)
 
-# Data splitting to exclude 0-bedroom apartments
-PricingData.estimation.reviewed <- PricingData.estimation.non0
-PricingData.estimation.non0 <- subset(PricingData.estimation.reviewed, bedrooms > 0)
-
 # linear regression
 fit <- lm(scale(price)~room_type+neighborhood+reviews+overall_satisfaction+accommodates+bedrooms,data=PricingData.estimation.non0)
 summary(fit)
@@ -256,17 +258,17 @@ summary(fit.int)
 ## Step 4: Validate Prediction Quality
 
 ```{r echo=FALSE, fig.height=4.5}
-predicted.prices.testing<-predict(fit, PricingData.test) #predict the prices of the listings left for testing the model
-percent.errors <- abs((PricingData.test$price-predicted.prices.testing)/PricingData.test$price)*100 #calculate absolute percentage errors
-mean(percent.errors) #display Mean Absolute Percentage Error (MAPE)
+#predicted.prices.testing<-predict(fit, PricingData.test) #predict the prices of the listings left for testing the model
+#percent.errors <- abs((PricingData.test$price-predicted.prices.testing)/PricingData.test$price)*100 #calculate absolute percentage errors
+#mean(percent.errors) #display Mean Absolute Percentage Error (MAPE)
 # repeat the same for the log model
-predicted.prices.testing.log<-exp(predict(fit.log, PricingData.test))
-percent.errors.log <- abs((PricingData.test$price-predicted.prices.testing.log)/PricingData.test$price)*100
-mean(percent.errors.log)
+#predicted.prices.testing.log<-exp(predict(fit.log, PricingData.test))
+#percent.errors.log <- abs((PricingData.test$price-predicted.prices.testing.log)/PricingData.test$price)*100
+#mean(percent.errors.log)
 # repeat the same for the log model
-predicted.prices.testing.int<-exp(predict(fit.log, PricingData.test))
-percent.errors.int <- abs((PricingData.test$price-predicted.prices.testing.int)/PricingData.test$price)*100
-mean(percent.errors.int)
+#predicted.prices.testing.int<-exp(predict(fit.log, PricingData.test))
+#percent.errors.int <- abs((PricingData.test$price-predicted.prices.testing.int)/PricingData.test$price)*100
+#mean(percent.errors.int)
 ```
 
 # Results Analysis
