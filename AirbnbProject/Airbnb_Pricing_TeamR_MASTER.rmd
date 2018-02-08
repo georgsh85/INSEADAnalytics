@@ -236,42 +236,63 @@ A simple visualization tool to assess the discriminatory power of the independen
 # Data splitting based on numbers of reviews
 PricingData.estimation.0 <- subset(PricingData.estimation, reviews == 0)
 PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 2)
-#bedrooms <- cut(bedrooms, breaks = c(0.5,1.5,2.5,3.5,4.5,5.5,max(x)),labels = c("1","2","3","4","5", "5+"), include.lowest = TRUE)
+```
 
+### Linear Regression
+
+```{r echo=FALSE, fig.height=4.5}
 # linear regression
 fit <- lm(scale(price)~room_type+neighborhood+reviews+overall_satisfaction+accommodates+bedrooms,data=PricingData.estimation.non0)
 summary(fit)
 fit.step <- stepAIC(fit,direction = "both")
 summary(fit.step)
-#Prediction <- predict(fit,PricingData.validation)
+```
 
+### Log-Linear Regression
+
+```{r echo=FALSE, fig.height=4.5}
 # Log-linear regression
 fit.log <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)+bedrooms,data=PricingData.estimation.non0)
 summary(fit.log)
 fit.log.step <- stepAIC(fit.log, direction = "both")
 summary(fit.log.step)
+```
 
+### Log-Linear Regression with Interactions
+
+```{r echo=FALSE, fig.height=4.5}
 # Log-linear regression with interactions
-#fit.int <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)*bedrooms+bedrooms,data=PricingData.estimation.non0)
 fit.int <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)*log(bedrooms)+log(bedrooms),data=PricingData.estimation.non0)
-fit.int.step <- stepAIC(fit.log, direction = "both")
+fit.int.step <- stepAIC(fit.int, direction = "both")
 summary(fit.int.step)
 ```
 
 ## Step 4: Validate Prediction Quality
 
+### Linear Regression
+
 ```{r echo=FALSE, fig.height=4.5}
-#predicted.prices.testing<-predict(fit, PricingData.test) #predict the prices of the listings left for testing the model
-#percent.errors <- abs((PricingData.test$price-predicted.prices.testing)/PricingData.test$price)*100 #calculate absolute percentage errors
-#mean(percent.errors) #display Mean Absolute Percentage Error (MAPE)
+predicted.prices.testing<-predict(fit.step, PricingData.test) #predict the prices of the listings left for testing the model
+percent.errors <- abs((PricingData.test$price-predicted.prices.testing)/PricingData.test$price)*100 #calculate absolute percentage errors
+mean(percent.errors) #display Mean Absolute Percentage Error (MAPE)
+```
+
+### Log-Linear Regression
+
+```{r echo=FALSE, fig.height=4.5}
 # repeat the same for the log model
-#predicted.prices.testing.log<-exp(predict(fit.log, PricingData.test))
-#percent.errors.log <- abs((PricingData.test$price-predicted.prices.testing.log)/PricingData.test$price)*100
-#mean(percent.errors.log)
+predicted.prices.testing.log<-exp(predict(fit.log.step, PricingData.test))
+percent.errors.log <- abs((PricingData.test$price-predicted.prices.testing.log)/PricingData.test$price)*100
+mean(percent.errors.log)
+```
+
+### Log-Linear Regression with Interactions
+
+```{r echo=FALSE, fig.height=4.5}
 # repeat the same for the log model
-#predicted.prices.testing.int<-exp(predict(fit.log, PricingData.test))
-#percent.errors.int <- abs((PricingData.test$price-predicted.prices.testing.int)/PricingData.test$price)*100
-#mean(percent.errors.int)
+predicted.prices.testing.int<-exp(predict(fit.int.step, PricingData.test))
+percent.errors.int <- abs((PricingData.test$price-predicted.prices.testing.int)/PricingData.test$price)*100
+mean(percent.errors.int)
 ```
 
 # Results Analysis
