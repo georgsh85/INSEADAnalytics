@@ -114,6 +114,11 @@ Only after following these steps, the resulting model can be used to predict the
 
 ## Step 1: Prepare and split the data 
 
+We split the data into an estimation sample and two validation samples - using randomized splitting technique. We chose the split to be 90% estimation, 5% validation, and 5% test data, depending on the number of observations.
+
+
+In our case we used 18000 observations before initial screening, which left us with 12,000 - we then split the remaining 12,000 data points into estimation 10,800, 100 validation data, and 100 test data.
+
 Knowing that only a minor share of all listings are shared rooms (`r round(table(PricingData$room_type)["Shared room"]/nrow(PricingData)*100, digits=2) `% of all listings in this dataset), the team decided to remove these listings from the data. This will reduce the current dataset to `r nrow(PricingData) - table(PricingData$room_type)["Shared room"] ` lisitings.
 ```{r echo=FALSE}
 PricingData <- subset(PricingData, room_type != "Shared room")
