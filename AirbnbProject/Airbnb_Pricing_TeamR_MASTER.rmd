@@ -273,10 +273,10 @@ summary(fit.int)
 
 # Results Analysis
 Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
-Iterating our model and tweaking the analysis process, we chose to segment the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points. 
+Iterating our model and tweaking the analysis process, we chose to segment and remove part of the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points. 
 
 
 # Conclusion
 In this project, we tried to predict the price per night of an accomodation, based on variables taken from our data source. As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars) would have a strong impact on price.
-To this point, we had difficulty in obtaining a high level of accuracy in our predictions.
+To this point, we had difficulty in obtaining a high level of accuracy in our predictions - our finale Adjusted R score converged towards the 60% level.
 
