@@ -235,7 +235,7 @@ A simple visualization tool to assess the discriminatory power of the independen
 ```{r echo=FALSE, fig.height=4.5}
 # Data splitting based on numbers of reviews
 PricingData.estimation.0 <- subset(PricingData.estimation, reviews == 0)
-PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 2)
+PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 0)
 ```
 
 ### Linear Regression
@@ -244,28 +244,31 @@ PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 2)
 # linear regression
 fit <- lm(scale(price)~room_type+neighborhood+reviews+overall_satisfaction+accommodates+bedrooms,data=PricingData.estimation.non0)
 summary(fit)
-fit.step <- stepAIC(fit,direction = "both")
-summary(fit.step)
+#fit.step <- stepAIC(fit,direction = "both")
+#summary(fit.step)
+fit.step <- fit
 ```
 
 ### Log-Linear Regression
 
 ```{r echo=FALSE, fig.height=4.5}
 # Log-linear regression
-fit.log <-lm(log(price)~room_type+neighborhood+reviews+overall_satisfaction+log(accommodates)+bedrooms,data=PricingData.estimation.non0)
+fit.log <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)+log(bedrooms),data=PricingData.estimation.non0)
 summary(fit.log)
-fit.log.step <- stepAIC(fit.log, direction = "both")
-summary(fit.log.step)
+#fit.log.step <- stepAIC(fit.log, direction = "both")
+#summary(fit.log.step)
+fit.log.step <- fit.log
 ```
 
 ### Log-Linear Regression with Interactions
 
 ```{r echo=FALSE, fig.height=4.5}
 # Log-linear regression with interactions
-fit.int <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)*log(bedrooms)+log(bedrooms),data=PricingData.estimation.non0)
+fit.int <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)*bedrooms+log(bedrooms),data=PricingData.estimation.non0)
 summary(fit.int)
-fit.int.step <- stepAIC(fit.int, direction = "both")
-summary(fit.int.step)
+#fit.int.step <- stepAIC(fit.int, direction = "both")
+#summary(fit.int.step)
+fit.int.step <- fit.int
 ```
 
 ## Step 4: Validate Prediction Quality
