@@ -178,12 +178,16 @@ iprint.df(round(thecor,2), scale=TRUE)
 ```
 
 A correlation matrix is a table showing correlation coefficients between sets of variables. This allows us to identify pairs with higher correlations: these appear to be the following pairs:
-overall satisfaction - reviews
-bedrooms - accomodates
-These two pairs seem to overlap in their definitions
-price - accomodates
-price - bedrooms
-The final two pairs seem to be similar, but indidcate that there is a relationship between the price of an accomodation and the number of people or bedrooms included in the lodging.
+
+(overall satisfaction - reviews)
+(bedrooms - accomodates)
+
+ These two pairs seem to overlap in their definitions
+
+(price - accomodates)
+(price - bedrooms)
+
+ The final two pairs seem to be similar, but indidcate that there is a relationship between the price of an accomodation and the number of people or bedrooms included in the lodging.
 
 ### Scatterplots
 
@@ -300,10 +304,13 @@ PricingData.test.non0 <- subset(PricingData.test, reviews > 0)
 
 ### Linear Regression
 
+The *Mean Absolute Percentage Error* of a model gives us an idea about how well it can forecast, the lower being better.
+
 ```{r echo=FALSE, fig.height=4.5}
 predicted.prices.testing<-predict(fit.step, PricingData.test.non0) #predict the prices of the listings left for testing the model
 percent.errors <- abs((PricingData.test.non0$price-predicted.prices.testing)/PricingData.test.non0$price)*100 #calculate absolute percentage errors
 ```
+
 The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors),digits=2) `%.
 
 ### Log-Linear Regression
@@ -337,6 +344,7 @@ While *MAPE* on the validation data is `r round(mean(percent.errors.int2),digits
 # Results Analysis
 Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
 Iterating our model and tweaking the analysis process, we chose to segment and remove part of the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points. 
+As such, we tried to remove inconsistencies from our data at the start of the model, thus making sure that each of the parts of the data (estimation, validation, test) are consistent.
 
 
 # Conclusion
@@ -345,5 +353,5 @@ Our purpose in this exercise was to be able to predict the price of an accomodat
 Going through the process, we ended up seeing shortcomings in the data - we had to filter out the data, and noted some inconsistencies. For example, data indicating a ration of "0" could mean either a review score of 0, or an absence of a review (which is usually the case for new properties). As such, we chose to consider only the review ratings above a certain cutoff, in order to minimize the impact on the model accuracy.
 As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars) would have a strong impact on price. Other elements were also overlooked in our data, such as the size (Sq-Ft) of the lodging.
 
-To this point, we had difficulty in obtaining a high level of accuracy in our predictions - our finale Adjusted R score converged towards the *60% level*.
+We tried to obtain the high levels of accuracy in our predictions - our Adjusted R score is converging towards the *60% level*. Our Mean Absolute Percentage Error is converging towards the vaunted level of 20% which is very encouraging in terms of the quality of our output.
 
