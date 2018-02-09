@@ -251,6 +251,9 @@ A simple visualization tool to assess the discriminatory power of the independen
 
 ## Step 3: Building a Regression Model
 
+We built three regression models: first a linear, then a log-linear and finally a log-linear model with interactions. We iterated the variables in the models to increase R-squared, and reduce MAPE when running the models on the test data. We aimed to optimize the models with the AIC method, however this ended after the first step in most cases, not improving the models much.
+Before running the data, we excluded the listings witht 0 reviews as the price of these might not be tested by the market, i.e., irrelevant for the price estimation.
+
 ```{r echo=FALSE, fig.height=4.5}
 # Data splitting based on numbers of reviews
 PricingData.estimation.0 <- subset(PricingData.estimation, reviews == 0)
@@ -259,6 +262,8 @@ PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 0)
 
 ### Linear Regression
 
+The linear regression model consistently gave an R-squared less than 0.5.
+Most variables seemed significant: room_type, neighborhood, reviews, overall_satisfaction, accommodates and bedrooms.
 ```{r echo=FALSE, comment=NA, fig.height=4.5}
 # linear regression
 fit <- lm(scale(price)~room_type+neighborhood+reviews+overall_satisfaction+accommodates+bedrooms,data=PricingData.estimation.non0)
@@ -269,6 +274,9 @@ fit.step <- fit
 ```
 
 ### Log-Linear Regression
+
+The log-linear regression model consistently gave an R-squared between 0.5 and 0.55.
+Percentage changes in price were driven by the following variables: room_type, neighborhood, reviews, overall_satisfaction, log(accommodates) and log(bedrooms). I.e., we assumed that there is a marginally decreasing impact of additional guests or bedrooms on the price.
 
 ```{r echo=FALSE, comment=NA, fig.height=4.5}
 # Log-linear regression
@@ -281,6 +289,8 @@ fit.log.step <- fit.log
 
 ### Log-Linear Regression with Interactions
 
+The log-linear regression model with interactions also consistently gave an R-squared between 0.5 and 0.55, a slightly better model than the log-linear in most cases.
+Percentage changes in price were driven by the following variables: room_type, neighborhood, reviews, overall_satisfaction, log(accommodates), log(bedrooms) and log(accommodates):bedrooms. I.e., we assumed that the price-effect of additional guests depends on the number of bedrooms: staying with 3 other people in the same bedroom is a different experience than 4 guests having a bedroom each.
 ```{r echo=FALSE, comment=NA, fig.height=4.5}
 # Log-linear regression with interactions
 fit.int <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)*bedrooms+log(bedrooms),data=PricingData.estimation.non0)
@@ -292,7 +302,9 @@ summary(fit.int.step)
 
 ## Step 4: Validate Prediction Quality
 
-The *Mean Absolute Percentage Error* of a model gives us an idea about how well it can forecast, the lower being better.
+In this step, we ran the models on the testing data, and finally the log-linera-interaction model on the validation data.
+The *Mean Absolute Percentage Error* of a model gave us an idea about how well it can forecast, the lower being better. A 20% or lower figure indicates a 'good' model, 10% or below an 'excellent' model.
+According to their MAPE, our log-linear model (also with interactions) is close to good with a MAPE between 20-25%.
 
 ```{r echo=FALSE, fig.height=4.5}
 # Data splitting based on numbers of reviews
@@ -339,11 +351,6 @@ percent.errors.int2 <- abs((PricingData.validation.non0$price-predicted.prices.t
 ```
 While *MAPE* on the validation data is `r round(mean(percent.errors.int2),digits=2) `%.
 
-```{r}
-library(sjPlot)
-sjt.lm(fit.int.step,fit.log.step, file="output.html")# You have to save the table in html format.
-htmltools::includeHTML("output.html")# Finally you can call it from markdown
-```
 
 # Results Analysis
 Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of 
@@ -361,8 +368,7 @@ As a group, we were able to identify some variables not included in the data whi
 <<<<<<< HEAD
 To this point, we had difficulty in obtaining a high level of accuracy in our predictions - our finale Adjusted R score converged towards the *60% level*.
 =======
-Our Mean Absolute Percentage Error
-`r round(mean(percent.errors.int),digits=2) `%.
+Our Mean Absolute Percentage Error `r round(mean(percent.errors.int),digits=2) `%.
 is converging towards the vaunted level of 20% which is very encouraging in terms of the quality of our output.
->>>>>>> 4a095218a74edfdaef44faddf43f4114f26f5328
+
 
