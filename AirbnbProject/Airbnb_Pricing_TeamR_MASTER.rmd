@@ -333,5 +333,5 @@ Our purpose in this exercise was to be able to predict the price of an accomodat
 Going through the process, we ended up seeing shortcomings in the data - we had to filter out the data, and noted some inconsistencies. For example, data indicating a ration of "0" could mean either a review score of 0, or an absence of a review (which is usually the case for new properties). As such, we chose to consider only the review ratings above a certain cutoff, in order to minimize the impact on the model accuracy.
 As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars) would have a strong impact on price. Other elements were also overlooked in our data, such as the size (Sq-Ft) of the lodging.
 
-We tried to obtain the high levels of accuracy in our predictions - our Adjusted R score is converging towards the *60% level*. Our MAPA is converging towards the vaunted level of 20% which is very encouraging in terms of the quality of our output.
+We tried to obtain the high levels of accuracy in our predictions - our Adjusted R score is converging towards the *60% level*. Our Mean Absolute Percentage Error is converging towards the vaunted level of 20% which is very encouraging in terms of the quality of our output.
 
