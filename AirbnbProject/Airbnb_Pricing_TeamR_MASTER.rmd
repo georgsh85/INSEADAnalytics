@@ -285,18 +285,24 @@ fit.log.step <- fit.log
 # Log-linear regression with interactions
 fit.int <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)*bedrooms+log(bedrooms),data=PricingData.estimation.non0)
 summary(fit.int)
-#fit.int.step <- stepAIC(fit.int, direction = "both")
-#summary(fit.int.step)
-fit.int.step <- fit.int
+fit.int.step <- stepAIC(fit.int, direction = "both")
+summary(fit.int.step)
+#fit.int.step <- fit.int
 ```
 
 ## Step 4: Validate Prediction Quality
 
+```{r echo=FALSE, fig.height=4.5}
+# Data splitting based on numbers of reviews
+PricingData.test.0 <- subset(PricingData.test, reviews == 0)
+PricingData.test.non0 <- subset(PricingData.test, reviews > 0)
+```
+
 ### Linear Regression
 
 ```{r echo=FALSE, fig.height=4.5}
-predicted.prices.testing<-predict(fit.step, PricingData.test) #predict the prices of the listings left for testing the model
-percent.errors <- abs((PricingData.test$price-predicted.prices.testing)/PricingData.test$price)*100 #calculate absolute percentage errors
+predicted.prices.testing<-predict(fit.step, PricingData.test.non0) #predict the prices of the listings left for testing the model
+percent.errors <- abs((PricingData.test.non0$price-predicted.prices.testing)/PricingData.test.non0$price)*100 #calculate absolute percentage errors
 ```
 The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors),digits=2) `%.
 
@@ -304,8 +310,8 @@ The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.err
 
 ```{r echo=FALSE, fig.height=4.5}
 # repeat the same for the log model
-predicted.prices.testing.log<-exp(predict(fit.log.step, PricingData.test))
-percent.errors.log <- abs((PricingData.test$price-predicted.prices.testing.log)/PricingData.test$price)*100
+predicted.prices.testing.log<-exp(predict(fit.log.step, PricingData.test.non0))
+percent.errors.log <- abs((PricingData.test.non0$price-predicted.prices.testing.log)/PricingData.test.non0$price)*100
 ```
 The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors.log),digits=2) `%.
 
@@ -313,10 +319,20 @@ The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.err
 
 ```{r echo=FALSE, fig.height=4.5}
 # repeat the same for the log model
-predicted.prices.testing.int<-exp(predict(fit.int.step, PricingData.test))
-percent.errors.int <- abs((PricingData.test$price-predicted.prices.testing.int)/PricingData.test$price)*100
+predicted.prices.testing.int<-exp(predict(fit.int.step, PricingData.test.non0))
+percent.errors.int <- abs((PricingData.test.non0$price-predicted.prices.testing.int)/PricingData.test.non0$price)*100
 ```
-The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors.int),digits=2) `%.
+The *Mean Absolute Percentage Error* for this model on the test data is `r round(mean(percent.errors.int),digits=2) `%.
+
+```{r echo=FALSE, fig.height=4.5}
+# repeat the same for the validation data
+# Data splitting based on numbers of reviews
+PricingData.validation.0 <- subset(PricingData.validation, reviews == 0)
+PricingData.validation.non0 <- subset(PricingData.validation, reviews > 0)
+predicted.prices.testing.int2<-exp(predict(fit.int.step, PricingData.validation.non0))
+percent.errors.int2 <- abs((PricingData.validation.non0$price-predicted.prices.testing.int2)/PricingData.validation.non0$price)*100
+```
+While *MAPE* on the validation data is `r round(mean(percent.errors.int2),digits=2) `%.
 
 # Results Analysis
 Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
