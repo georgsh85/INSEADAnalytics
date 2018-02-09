@@ -298,10 +298,13 @@ fit.int.step <- fit.int
 
 ### Linear Regression
 
+The *Mean Absolute Percentage Error* of a model gives us an idea about how well it can forecast, the lower being better.
+
 ```{r echo=FALSE, fig.height=4.5}
 predicted.prices.testing<-predict(fit.step, PricingData.test) #predict the prices of the listings left for testing the model
 percent.errors <- abs((PricingData.test$price-predicted.prices.testing)/PricingData.test$price)*100 #calculate absolute percentage errors
 ```
+
 The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors),digits=2) `%.
 
 ### Log-Linear Regression
