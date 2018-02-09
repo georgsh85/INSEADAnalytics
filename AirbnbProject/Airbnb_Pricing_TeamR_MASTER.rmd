@@ -328,6 +328,7 @@ The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.err
 # Results Analysis
 Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
 Iterating our model and tweaking the analysis process, we chose to segment and remove part of the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points. 
+As such, we tried to remove inconsistencies from our data at the start of the model, thus making sure that each of the parts of the data (estimation, validation, test) are consistent.
 
 
 # Conclusion
