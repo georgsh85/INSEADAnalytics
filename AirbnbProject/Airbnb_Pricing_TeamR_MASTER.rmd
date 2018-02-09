@@ -292,6 +292,8 @@ summary(fit.int.step)
 
 ## Step 4: Validate Prediction Quality
 
+The *Mean Absolute Percentage Error* of a model gives us an idea about how well it can forecast, the lower being better.
+
 ```{r echo=FALSE, fig.height=4.5}
 # Data splitting based on numbers of reviews
 PricingData.test.0 <- subset(PricingData.test, reviews == 0)
@@ -344,7 +346,9 @@ htmltools::includeHTML("output.html")# Finally you can call it from markdown
 ```
 
 # Results Analysis
-Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of [tbc].
+Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of 
+'model_summary$adj.r.squared'
+
 Iterating our model and tweaking the analysis process, we chose to segment and remove part of the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points. 
 
 
@@ -354,5 +358,11 @@ Our purpose in this exercise was to be able to predict the price of an accomodat
 Going through the process, we ended up seeing shortcomings in the data - we had to filter out the data, and noted some inconsistencies. For example, data indicating a ration of "0" could mean either a review score of 0, or an absence of a review (which is usually the case for new properties). As such, we chose to consider only the review ratings above a certain cutoff, in order to minimize the impact on the model accuracy.
 As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars) would have a strong impact on price. Other elements were also overlooked in our data, such as the size (Sq-Ft) of the lodging.
 
+<<<<<<< HEAD
 To this point, we had difficulty in obtaining a high level of accuracy in our predictions - our finale Adjusted R score converged towards the *60% level*.
+=======
+Our Mean Absolute Percentage Error
+`r round(mean(percent.errors.int),digits=2) `%.
+is converging towards the vaunted level of 20% which is very encouraging in terms of the quality of our output.
+>>>>>>> 4a095218a74edfdaef44faddf43f4114f26f5328
 
