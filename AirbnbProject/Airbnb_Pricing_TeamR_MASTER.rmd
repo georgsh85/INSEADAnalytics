@@ -8,7 +8,7 @@ output:
     theme: paper
     toc: yes
     toc_float:
-      collapsed: no
+      collapsed: yes
       smooth_scroll: yes
   pdf_document:
     includes:
@@ -17,6 +17,23 @@ always_allow_html: yes
 ---
 
 <!-- rmarkdown::render("AirbnbProject/Airbnb_Pricing_TeamR_MASTER.rmd") -->
+
+<style>
+pre {
+  overflow-x: auto;
+}
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+</style>
+
+```{r global_options, echo = FALSE, include = FALSE}
+# code added to avoid breaking the regression output in the middle of table
+options(width = 999)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      cache = FALSE, tidy = FALSE, size = "small")
+```
 
 ```{r echo=FALSE, message=FALSE}
 make_pdf_file = 0 # SET THIS TO 1 IF WE COMPILE PDF FILE, 0 OTHERWISE (FOR HTML)
@@ -35,9 +52,9 @@ library(MASS)
 ```{r echo=FALSE, message=FALSE}
 # Please ENTER the filename
 datafile_name = "Data/tomslee_airbnb_amsterdam_1476_2017-07-22.csv"
+
+# File is read into PricingData
 PricingData <- read.csv(datafile_name, stringsAsFactors = TRUE)
-# We turn the data into data.matrix class so that we can easier manipulate it
-#PricingData <- data.matrix(PricingData)
 
 # Please ENTER the dependent variable.
 dependent_variable = 14 # i.e Price
@@ -45,9 +62,10 @@ dependent_variable = 14 # i.e Price
 # Please ENTER the attributes to use as independent variables. 
 independent_variables = c(1:13,18:19) # use all the available attributes
 
-max_data_report = 10
+# Enter the number of datasets to be shown
+max_data_report = 8
 
-# Please ENTER the percentage of data used for estimation
+# Please ENTER the percentage of data used for estimation, validation and test (in percent)
 estimation_data_percent = 90
 validation_data_percent = 5
 test_data_percent = 100-estimation_data_percent-validation_data_percent
@@ -57,16 +75,15 @@ random_sampling = 1
 
 # Please ENTER the maximum price for accomodation that shall be considered in the analysis
 cutoff.price = 1000
+
 # Please ENTER the minimum listings per neighborhood
 cutoff.neighborhood = 100
-
 ```
 
 # The Business Context
-AirBnB was founded in 2008 by *Brian Chesky*, *Joe Gebbia*, and *Nathan Blecharczyk* as *AirBed & Breakfast*, an online marketplace and hospitality service for short-term lodging. Over the past years, the share of professional hospitality providers has significantly increased and is now *crowding out* the private providers, threatening AirBnB's value proposition of offering *unique design and personal touch*. Within this context, the marketing department wants to run a campaign to attract more private providers. To do this, they requested the analytics department to create a tool that helps attract potential landlords by helping them understand how much money they could earn with their respective apartments through AirBnb.
+AirBnB was founded in 2008 by *Brian Chesky*, *Joe Gebbia*, and *Nathan Blecharczyk* as *AirBed & Breakfast*, an online marketplace and hospitality service for short-term lodging. Over the past years, the share of professional hospitality providers has significantly increased and is now *crowding out* the private providers, threatening AirBnB's value proposition of offering *unique design and personal touch*. Within this context, the marketing department wants to run a campaign to attract more private providers. To do this, they requested the analytics department to **create a tool that helps attract potential landlords by helping them understand how much money they could earn with their respective apartments through AirBnb**.
 
 As a pilot, Amsterdam was chosen because of the "AirBnB friendly" policy of the local regulators and the high number of short-term visitors. The proposed solution, however, is designed to be city-independent and therefore, an easily replicable process was designed, using *.rmd-Files* and *Github*.
-
 
 <hr>\clearpage
 
@@ -115,20 +132,22 @@ Only after following these steps, the resulting model can be used to predict the
 
 ## Step 1: Prepare and split the data 
 
+### Shared Rooms
+
 Knowing that only a minor share of all listings are shared rooms (`r round(table(PricingData$room_type)["Shared room"]/nrow(PricingData)*100, digits=2) `% of all listings in this dataset), the team decided to remove these listings from the data. This will reduce the current dataset to `r nrow(PricingData) - table(PricingData$room_type)["Shared room"] ` listings.
 ```{r echo=FALSE}
 PricingData <- subset(PricingData, room_type != "Shared room")
 ```
 
-In addition to that, the dataset contains listings for which number of bedrooms was set to 0 (`r nrow(subset(PricingData, bedrooms==0))` or `r round(nrow(subset(PricingData, bedrooms==0))/nrow(PricingData)*100, digits=2)`%). These datapoints are removed from the dataset.
+### Invalid Number of Bedrooms
+
+In addition to that, the dataset contains listings for which the *number of bedrooms* was set to 0 (`r nrow(subset(PricingData, bedrooms==0))` or `r round(nrow(subset(PricingData, bedrooms==0))/nrow(PricingData)*100, digits=2)`%). These datapoints are removed from the dataset.
 
 ```{r echo=FALSE}
 PricingData <- subset(PricingData, bedrooms > 0)
 ```
 
-As we aim to finally measure and report the performance of the models on **test data**, we split the data into an estimation sample and two validation samples - using some kind of randomized splitting technique. We used a split of 90% estimation, 5% validation, and 5% test data, in order to keep less than thousand listings for the validation and test sets, keeping them well manageable. While setting up the estimation and validation samples, we are careful to maintain the same balance of the dependent variable (price) categories as in the overall dataset.
-
-The second validation data mimic out-of-sample data, and the performance on this validation set is a better approximation of the performance one should expect in practice from the model. In practice, one should usually iterate the model several times using the first validation sample each time, and at the end make the final assessment of the model using the test sample. In this note, we used less iterations for simplicity. Finally, the second validation data is only used once at the very end before making final business decisions based on the analysis. 
+### K-Fold
 
 ```{r echo=FALSE}
 if (random_sampling){
@@ -148,11 +167,13 @@ PricingData.validation = PricingData[ids.validation,]
 PricingData.test = PricingData[ids.test,]
 ```
 
-We typically refer to the three data samples as **estimation data** (`r estimation_data_percent`% of the data in our case), **validation data**  (`r validation_data_percent`% of the data) and **test data** (the remaining `r 100 - estimation_data_percent  -  validation_data_percent`% of the data).
+To validate and test the result of our regression, we split the available data into 3 subsets. We refer to the three data samples as **estimation data** (`r estimation_data_percent`% of the data in our case), **validation data**  (`r validation_data_percent`% of the data) and **test data** (the remaining `r 100 - estimation_data_percent  -  validation_data_percent`% of the data). In a more thorough analysis, different or multiple models could be prepared based on the estimation set and an average of these could be used for prediction.
 
 In our case we use `r nrow(PricingData.estimation)` observations in the *estimation data*, `r nrow(PricingData.validation)` in the *validation data*, and `r nrow(PricingData.test)` in the *test data*. 
 
 ## Step 2: Exploratory Data Analysis
+
+We will now examine the data a bit more thoroughly.
 
 ### Dependent variable distribution 
 
@@ -172,44 +193,63 @@ ggplot(PricingData.estimation, aes(x=price)) + geom_histogram(binwidth=25) + ggt
 We can notice a high concentration of accomodation prices between 100 and 200 USD.
 
 ### Correlation matrix
+
+A correlation matrix is a table showing correlation coefficients between sets of variables. This allows us to identify pairs with higher correlations:
+
 ```{r}
 thecor = round(cor(data.matrix(PricingData.estimation[c(4,8:12,14,18,19)])),2)
 iprint.df(round(thecor,2), scale=TRUE)
 ```
 
-A correlation matrix is a table showing correlation coefficients between sets of variables. This allows us to identify pairs with higher correlations: these appear to be the following pairs:
-overall satisfaction - reviews
-bedrooms - accomodates
-These two pairs seem to overlap in their definitions
-price - accomodates
-price - bedrooms
-The final two pairs seem to be similar, but indidcate that there is a relationship between the price of an accomodation and the number of people or bedrooms included in the lodging.
+We can identify a couple of interesting observations: *Overall satisfaction* correlates strongly with *Reviews* and *Bedrooms* correlates with *Accomodates*. Neither of them is a surprise and confirm intuition.
+Furthermore, we see a higher correlation between *Accomodates* and the dependent variable *Price* as well as between *Bedrooms* and *Price*. These indicate the - nonsurprising - relationship between the price of an accomodation and the number of people or bedrooms that can be hosted in the lodging.
+
+
+### Boxplots for Numerical Variables
+
+A simple visualization tool to assess the discriminatory power of the independent variables are the box plots. A box plot visually indicates simple summary statistics of an independent variable (e.g. mean, median, top and bottom quantiles, min, max, etc.). For example consider the box plots for our estimation data for the numerical values.
+
+```{r echo=FALSE, warning=FALSE, fig.height=4.5}
+# Please ENTER the selected independent variables for which to draw box plots.
+boxplots_independent_variables = c(10:12) # use only the PAY_ variables
+
+x1 = PricingData.estimation[,boxplots_independent_variables]
+
+colnames(x1) <- c("Overall Satisfaction", "Accommodates", "Bedrooms") # 1:ncol(x1)
+
+swatch.default <- as.character(swatch())
+set_swatch(c(swatch.default[1], colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol(x1))))
+ggplot(melt(cbind.data.frame(n=1:nrow(x1), x1), id="n"), aes(x=n, y=value, colour=variable)) + geom_boxplot(fill="#FFFFFF", size=0.66, position=position_dodge(1.1*nrow(x1))) + ggtitle("Boxplot for numerical variables")
+set_swatch(swatch.default)
+```
+
+The chart helps us to get a first understanding of the numerical variables. 
 
 ### Scatterplots
 
-Scatter plots are used to plot data points on a horizontal and a vertical axis in the attempt to show how much one variable is affected by another. In this case, we plotted Reviews vs Price (which is the main focus of our research).
+Scatter plots are used to plot data points on a horizontal and a vertical axis in the attempt to show how much one variable is affected by another. In this case, we plotted Price vs. Reviews (which is the main focus of our research).
 
 ```{r}
 ggplot(PricingData.estimation, aes(x=reviews, y=price)) + geom_point() + ggtitle("Scatterplot of Reviews and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-```{r echo=FALSE, fig.height=4.5}
-ggplot(PricingData, aes(x=neighborhood, y=price)) + geom_point() + ggtitle("Scatterplot of Neighborhood and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+The next scatterplot shows the price versus the neighborhoods. We can see that some neighborhoods have more properties available than others, and we can observe the disparity in pricing.
+
+```{r echo=FALSE, fig.height=9}
+ggplot(PricingData.estimation, aes(x=neighborhood, y=price)) + geom_point() + ggtitle("Scatterplot of Neighborhood and Prices") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-This scatterplot shows the price versus the neighborhoods. We can see that some neighborhoods have more properties available than others, and we can observe the disparity in pricing.
+Next, we show the price versus the satisfaction. Again, we can see that some satisfaction scores occur more often than other and also a certain relationship between higher prices with higher satisfaction levels.
 
 ```{r echo=FALSE, fig.height=4.5}
-ggplot(PricingData, aes(x=overall_satisfaction, y=price)) + geom_point() + ggtitle("Scatterplot of Satisfaction and Prices")
+ggplot(PricingData.estimation, aes(x=overall_satisfaction, y=price)) + geom_point() + ggtitle("Scatterplot of Satisfaction and Prices")
 ```
 
-This scatterplot shows the price versus the satisfaction. Again, we can see that some satisfaction scores occur more often than other.
+Lastly, we look at the price versus the number of bedrooms. This - isolated - does not provide much information.
 
 ```{r echo=FALSE, fig.height=4.5}
 ggplot(PricingData, aes(x=bedrooms, y=price)) + geom_point() + ggtitle("Scatterplot of # of Bedrooms and Prices")
 ```
-
-This scatterplot shows the price versus the number of bedrooms.
 
 
 ### Neighborhoods
@@ -232,27 +272,11 @@ PricingData.validation <- subset(PricingData.validation, neighborhood %in% names
 PricingData.test <- subset(PricingData.test, neighborhood %in% names(occurences[occurences >= cutoff.neighborhood]))
 ```
 
-```{r echo=FALSE, fig.height=4.5}
-# Please ENTER the selected independent variables for which to draw box plots.
-boxplots_independent_variables = c(10:12) # use only the PAY_ variables
-
-x1 = PricingData.estimation[,boxplots_independent_variables]
-
-colnames(x1) <- c("Overall Satisfaction", "Accommodates", "Bedrooms") # 1:ncol(x1)
-
-swatch.default <- as.character(swatch())
-set_swatch(c(swatch.default[1], colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol(x1))))
-ggplot(melt(cbind.data.frame(n=1:nrow(x1), x1), id="n"), aes(x=n, y=value, colour=variable)) + geom_boxplot(fill="#FFFFFF", size=0.66, position=position_dodge(1.1*nrow(x1))) + ggtitle("Boxplot for numerical variables")
-set_swatch(swatch.default)
-```
-
-A simple visualization tool to assess the discriminatory power of the independent variables are the box plots. A box plot visually indicates simple summary statistics of an independent variable (e.g. mean, median, top and bottom quantiles, min, max, etc.). For example consider the box plots for our estimation data for the numerical values.
-
-
 ## Step 3: Building a Regression Model
 
 We built three regression models: first a linear, then a log-linear and finally a log-linear model with interactions. We iterated the variables in the models to increase R-squared, and reduce MAPE when running the models on the test data. We aimed to optimize the models with the AIC method, however this ended after the first step in most cases, not improving the models much.
-Before running the data, we excluded the listings witht 0 reviews as the price of these might not be tested by the market, i.e., irrelevant for the price estimation.
+
+Before running the data, we excluded the listings with 0 reviews as the price of these might not be tested by the market, i.e. irrelevant for the price estimation.
 
 ```{r echo=FALSE, fig.height=4.5}
 # Data splitting based on numbers of reviews
@@ -263,7 +287,9 @@ PricingData.estimation.non0 <- subset(PricingData.estimation, reviews > 0)
 ### Linear Regression
 
 The linear regression model consistently gave an R-squared less than 0.5.
+
 Most variables seemed significant: room_type, neighborhood, reviews, overall_satisfaction, accommodates and bedrooms.
+
 ```{r echo=FALSE, comment=NA, fig.height=4.5}
 # linear regression
 fit <- lm(scale(price)~room_type+neighborhood+reviews+overall_satisfaction+accommodates+bedrooms,data=PricingData.estimation.non0)
@@ -275,7 +301,8 @@ fit.step <- fit
 
 ### Log-Linear Regression
 
-The log-linear regression model consistently gave an R-squared between 0.5 and 0.55.
+The log-linear regression model consistently gave an R-squared between 0.5 and 0.55. 
+
 Percentage changes in price were driven by the following variables: room_type, neighborhood, reviews, overall_satisfaction, log(accommodates) and log(bedrooms). I.e., we assumed that there is a marginally decreasing impact of additional guests or bedrooms on the price.
 
 ```{r echo=FALSE, comment=NA, fig.height=4.5}
@@ -290,7 +317,9 @@ fit.log.step <- fit.log
 ### Log-Linear Regression with Interactions
 
 The log-linear regression model with interactions also consistently gave an R-squared between 0.5 and 0.55, a slightly better model than the log-linear in most cases.
+
 Percentage changes in price were driven by the following variables: room_type, neighborhood, reviews, overall_satisfaction, log(accommodates), log(bedrooms) and log(accommodates):bedrooms. I.e., we assumed that the price-effect of additional guests depends on the number of bedrooms: staying with 3 other people in the same bedroom is a different experience than 4 guests having a bedroom each.
+
 ```{r echo=FALSE, comment=NA, fig.height=4.5}
 # Log-linear regression with interactions
 fit.int <-lm(log(price)~room_type+neighborhood+overall_satisfaction+reviews+log(accommodates)*bedrooms+log(bedrooms),data=PricingData.estimation.non0)
@@ -302,8 +331,10 @@ summary(fit.int.step)
 
 ## Step 4: Validate Prediction Quality
 
-In this step, we ran the models on the testing data, and finally the log-linera-interaction model on the validation data.
-The *Mean Absolute Percentage Error* of a model gave us an idea about how well it can forecast, the lower being better. A 20% or lower figure indicates a 'good' model, 10% or below an 'excellent' model.
+In this step, we ran the models on the testing data, and finally the log-linear-interaction model on the validation data.
+
+The *Mean Absolute Percentage Error* of a model gave us an idea about how well it can forecast, the lower being better. A 20% or lower figure indicates a *good* model, 10% or below an *excellent* model.
+
 According to their MAPE, our log-linear model (also with interactions) is close to good with a MAPE between 20-25%.
 
 ```{r echo=FALSE, fig.height=4.5}
@@ -319,6 +350,7 @@ predicted.prices.testing<-predict(fit.step, PricingData.test.non0) #predict the 
 percent.errors <- abs((PricingData.test.non0$price-predicted.prices.testing)/PricingData.test.non0$price)*100 #calculate absolute percentage errors
 plot(fit.step, pch=16, which=1) #plot residual vs fitted
 ```
+
 The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors),digits=2) `%.
 
 ### Log-Linear Regression
@@ -329,6 +361,7 @@ predicted.prices.testing.log<-exp(predict(fit.log.step, PricingData.test.non0))
 percent.errors.log <- abs((PricingData.test.non0$price-predicted.prices.testing.log)/PricingData.test.non0$price)*100
 plot(fit.log.step, pch=16, which=1) #plot residual vs fitted
 ```
+
 The *Mean Absolute Percentage Error* for this model is `r round(mean(percent.errors.log),digits=2) `%.
 
 ### Log-Linear Regression with Interactions
@@ -339,6 +372,7 @@ predicted.prices.testing.int<-exp(predict(fit.int.step, PricingData.test.non0))
 percent.errors.int <- abs((PricingData.test.non0$price-predicted.prices.testing.int)/PricingData.test.non0$price)*100
 plot(fit.int.step, pch=16, which=1) #plot residual vs fitted
 ```
+
 The *Mean Absolute Percentage Error* for this model on the test data is `r round(mean(percent.errors.int),digits=2) `%.
 
 ```{r echo=FALSE, fig.height=4.5}
@@ -349,26 +383,24 @@ PricingData.validation.non0 <- subset(PricingData.validation, reviews > 0)
 predicted.prices.testing.int2<-exp(predict(fit.int.step, PricingData.validation.non0))
 percent.errors.int2 <- abs((PricingData.validation.non0$price-predicted.prices.testing.int2)/PricingData.validation.non0$price)*100
 ```
+
 While *MAPE* on the validation data is `r round(mean(percent.errors.int2),digits=2) `%.
 
-
 # Results Analysis
-Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of 
-'model_summary$adj.r.squared'
+Looking at the results, it seems as though our model is able to predict the value of an appartment through short-term AirBnB rentals with an adjusted R score of `r round(summary(fit.int.step)$adj.r.squared, digit=3) `
 
 Iterating our model and tweaking the analysis process, we chose to segment and remove part of the data. For instance, we thought about the incidence of "reviews" on price: in fact, places which have never been booked will be priced less accurately than "mature" properties on the market. Looking at this, we tried to minimize the impact of the data exclusion on our total number of data points. 
-
 
 # Conclusion
 
 Our purpose in this exercise was to be able to predict the price of an accomodation for a night in Amsterdam through AirBnB. This exercise was meant to entice private owners to list their property on the platform, given our routine's ability to predict the price the listing would sell for.
-Going through the process, we ended up seeing shortcomings in the data - we had to filter out the data, and noted some inconsistencies. For example, data indicating a ration of "0" could mean either a review score of 0, or an absence of a review (which is usually the case for new properties). As such, we chose to consider only the review ratings above a certain cutoff, in order to minimize the impact on the model accuracy.
+
+Going through the process, we ended up seeing shortcomings in the data - we had to filter out the data and noted some inconsistencies. For example, data indicating a ration of "0" could mean either a review score of 0, or an absence of a review (which is usually the case for new properties). As such, we chose to consider only the review ratings above a certain cutoff, in order to minimize the impact on the model accuracy.
+
 As a group, we were able to identify some variables not included in the data which could have been significant: for example, the "premium-ness" of the lodging (equivalent to a hotel's number of stars) would have a strong impact on price. Other elements were also overlooked in our data, such as the size (Sq-Ft) of the lodging.
 
-<<<<<<< HEAD
 To this point, we had difficulty in obtaining a high level of accuracy in our predictions - our finale Adjusted R score converged towards the *60% level*.
-=======
-Our Mean Absolute Percentage Error `r round(mean(percent.errors.int),digits=2) `%.
-is converging towards the vaunted level of 20% which is very encouraging in terms of the quality of our output.
 
+Our Mean Absolute Percentage Error (`r round(mean(percent.errors.int),digits=2) `%) is converging towards the vaunted level of 20% which is very encouraging in terms of the quality of our output.
 
+**Future models would require a better dataset to provide useful predictions. As a preliminary result, however, we can propose the above shown models.**
